@@ -1,0 +1,1118 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Train">
+<meta name="application-name" content="Train">
+<meta name="theme-color" id="themecolor" content="#ffe2cc">
+<script>try{var st=(JSON.parse(localStorage.getItem('dailyTrainer.v1'))||{}).settings;document.documentElement.dataset.theme=(st&&st.theme)||'light';}catch(e){}</script>
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23f59e0b'/%3E%3Cstop offset='.5' stop-color='%23e8505b'/%3E%3Cstop offset='1' stop-color='%236d28d9'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' fill='url(%23g)'/%3E%3Ccircle cx='90' cy='90' r='50' fill='none' stroke='%23ffffff' stroke-opacity='.35' stroke-width='14'/%3E%3Cpath d='M90 40a50 50 0 1 1-50 50' fill='none' stroke='%23ffffff' stroke-width='14' stroke-linecap='round'/%3E%3Cpath d='M68 92l16 16 30-34' fill='none' stroke='%23ffffff' stroke-width='14' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23e8505b'/%3E%3Cpath d='M58 92l22 22 42-48' fill='none' stroke='%23ffffff' stroke-width='18' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>Daily Training</title>
+<style>
+/* Sunset theme. Light is the default; dark is opt-in from Settings. */
+:root{
+  --bg:#fff8f1;--sky:#ffe2cc;--card:#ffffff;--text:#2b1820;--muted:#6e4d57;--line:#e6cfc6;--soft:#fbeee6;
+  --home:#b4234a;--home-t:#fde9ee;
+  --gym:#5a2fa0;--gym-t:#efe9fb;
+  --cond:#b3400b;--cond-t:#fdebe0;
+  --nut:#855500;--nut-t:#fcf1d9;
+  --chk:#97186a;--chk-t:#fbe7f3;
+  --rest:#4b4f78;--rest-t:#edeef6;
+  --on-accent:#ffffff;--danger:#b42318;
+  --sun1:#f59e0b;--sun2:#e8505b;--sun3:#6d28d9;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+    --bg:#160d13;--sky:#3b1c2c;--card:#241821;--text:#fbeff1;--muted:#cdb5be;--line:#55404b;--soft:#34232d;
+    --home:#fda4b8;--home-t:#3a1a24;
+    --gym:#c9b6ff;--gym-t:#261d40;
+    --cond:#fdba8c;--cond-t:#3a2216;
+    --nut:#fcd36b;--nut-t:#33280f;
+    --chk:#f7a8d8;--chk-t:#3a1730;
+    --rest:#c3c7e8;--rest-t:#252840;
+    --on-accent:#1a1016;--danger:#fca5a5;
+    --sun1:#fcd36b;--sun2:#fb8a7e;--sun3:#c9b6ff;
+    color-scheme:dark;
+}
+@media (prefers-color-scheme: dark){
+  :root[data-theme="auto"]{
+    --bg:#160d13;--sky:#3b1c2c;--card:#241821;--text:#fbeff1;--muted:#cdb5be;--line:#55404b;--soft:#34232d;
+    --home:#fda4b8;--home-t:#3a1a24;
+    --gym:#c9b6ff;--gym-t:#261d40;
+    --cond:#fdba8c;--cond-t:#3a2216;
+    --nut:#fcd36b;--nut-t:#33280f;
+    --chk:#f7a8d8;--chk-t:#3a1730;
+    --rest:#c3c7e8;--rest-t:#252840;
+    --on-accent:#1a1016;--danger:#fca5a5;
+    --sun1:#fcd36b;--sun2:#fb8a7e;--sun3:#c9b6ff;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+  font-size:18px;line-height:1.4;color:var(--text);
+  background:var(--bg) linear-gradient(180deg,var(--sky) 0,var(--bg) 440px) no-repeat;
+  -webkit-tap-highlight-color:transparent;min-height:100vh;
+  padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) calc(100px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+}
+button,input,select{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer;touch-action:manipulation}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--text);outline-offset:2px}
+#app{max-width:1120px;margin:0 auto}
+.ico{width:24px;height:24px;flex:none}
+.c-home{--c:var(--home);--ct:var(--home-t)}
+.c-gym{--c:var(--gym);--ct:var(--gym-t)}
+.c-cond{--c:var(--cond);--ct:var(--cond-t)}
+.c-nut{--c:var(--nut);--ct:var(--nut-t)}
+.c-chk{--c:var(--chk);--ct:var(--chk-t)}
+.c-rest{--c:var(--rest);--ct:var(--rest-t)}
+
+/* Header */
+.top{display:flex;align-items:center;gap:16px;padding:6px 2px 18px}
+.top-text{flex:1;min-width:0}
+.date{color:var(--muted);font-weight:700}
+.top h1{font-size:30px;line-height:1.15;margin:6px 0 4px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:8px;background:var(--c);color:var(--on-accent);padding:6px 16px 6px 12px;border-radius:999px;font-size:24px;font-weight:800}
+.pill .ico{width:26px;height:26px}
+.meta{color:var(--muted)}
+.ring{position:relative;width:80px;height:80px;flex:none;color:var(--c)}
+.ring svg{width:100%;height:100%;display:block}
+.ring-bg{fill:none;stroke:var(--soft);stroke-width:7}
+.ring-fg{fill:none;stroke:url(#sunset);stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset .6s ease}
+.ring-t{position:absolute;inset:0;display:grid;place-items:center;font-weight:800;font-size:18px;color:var(--text)}
+.icon-btn{width:48px;height:48px;border-radius:50%;background:var(--card);border:1.5px solid var(--line);font:italic 800 22px Georgia,"Times New Roman",serif;flex:none}
+
+/* Cards */
+.card{background:var(--card);border-radius:20px;padding:18px;margin-bottom:16px;border-top:6px solid var(--c,var(--line));box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.card-h{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:800;margin-bottom:12px}
+.badge{width:40px;height:40px;border-radius:12px;background:var(--c);color:var(--on-accent);display:grid;place-items:center;flex:none}
+.count{margin-left:auto;font-size:18px;font-weight:800;background:var(--soft);padding:4px 12px;border-radius:999px;white-space:nowrap}
+.note{color:var(--muted);margin:2px 0 10px}
+.foot{margin-top:12px}
+.cols.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+
+/* Checklist items */
+.list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.item{border-radius:14px;background:var(--ct)}
+.row{display:flex;align-items:flex-start;gap:14px;width:100%;text-align:left;padding:12px 14px;min-height:60px;border-radius:14px}
+.box{width:32px;height:32px;border-radius:10px;border:2.5px solid var(--c);display:grid;place-items:center;flex:none;background:var(--card)}
+.box .ico{width:22px;height:22px;stroke-width:3;opacity:0;color:var(--on-accent)}
+.done .box{background:var(--c)}
+.done .box .ico{opacity:1}
+.txt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.nm{font-weight:800}
+.dose{font-weight:600}
+.cue{color:var(--muted)}
+.item.done{background:var(--soft)}
+.item.done .nm,.item.done .dose{color:var(--muted)}
+.item.done .nm{text-decoration:line-through;text-decoration-thickness:2px}
+.rowwrap{display:flex;align-items:flex-start}
+.rowwrap .row{flex:1;min-width:0}
+.howbtn{flex:none;margin:10px 10px 0 0;min-height:44px;padding:0 14px 0 10px;border-radius:999px;border:2px solid var(--c);background:var(--card);color:var(--text);font-weight:800;font-size:16px;display:inline-flex;align-items:center;gap:4px}
+.howbtn .ico{width:18px;height:18px;color:var(--c)}
+ol.how{margin:16px 0 18px 1.3em;display:flex;flex-direction:column;gap:10px}
+ol.how li{padding-left:4px}
+a.main{text-decoration:none}
+.tag{font-size:15px;font-weight:800;color:var(--muted);border:1.5px solid var(--line);border-radius:999px;padding:1px 8px;margin-left:6px;vertical-align:2px;text-decoration:none;display:inline-block}
+.just .box{animation:pop .32s ease}
+@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+
+/* Exercise rows */
+.ex-ctrl{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;padding:0 14px 14px 60px}
+.item.ex.done .ex-ctrl{display:none}
+.sets{display:flex;gap:10px;flex-wrap:wrap}
+.bub{width:48px;height:48px;border-radius:50%;border:2.5px solid var(--c);background:var(--card);font-weight:800;display:grid;place-items:center}
+.bub.on{background:var(--c);color:var(--on-accent)}
+.bub .ico{width:24px;height:24px;stroke-width:3}
+.wt{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.last{color:var(--muted);font-weight:700;display:inline-flex;align-items:center;gap:6px}
+.up{display:inline-flex;align-items:center;gap:2px;color:var(--text);font-weight:800}
+.up .ico{width:18px;height:18px}
+.step{display:flex;align-items:center;background:var(--card);border:1.5px solid var(--line);border-radius:14px;overflow:hidden}
+.step button{width:48px;height:48px;font-size:26px;font-weight:700}
+.step input{width:76px;height:48px;border:0;text-align:center;font-weight:800;background:transparent;-webkit-appearance:none;appearance:textfield}
+.step input::-webkit-outer-spin-button,.step input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.unit{color:var(--muted);padding-right:2px}
+.chip{min-height:44px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);font-weight:800;font-size:17px;background:var(--card);display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:var(--c);border-color:var(--c);color:var(--on-accent)}
+.chip .ico{width:18px;height:18px;stroke-width:3}
+
+/* Buttons */
+.main{min-height:52px;padding:12px 22px;border-radius:14px;background:var(--c);color:var(--on-accent);font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.minor{min-width:52px;min-height:52px;border-radius:14px;background:var(--soft);font-weight:800;font-size:24px}
+.ghost{min-height:50px;padding:10px 18px;border-radius:14px;border:1.5px solid var(--line);font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--card)}
+.block{width:100%}
+.main.on{background:var(--soft);color:var(--text)}
+@media (prefers-reduced-motion: no-preference){button:active{transform:scale(.97)}}
+
+/* Nutrition */
+.nrow{padding:14px 0;border-top:1px solid var(--line)}
+.nrow:first-of-type{border-top:0;padding-top:4px}
+.nhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.val{font-weight:800;font-size:22px}
+.goal{color:var(--muted)}
+.mk{width:30px;height:30px;border-radius:50%;border:2.5px solid var(--c);display:grid;place-items:center;flex:none}
+.mk .ico{width:18px;height:18px;stroke-width:3;opacity:0;color:var(--on-accent)}
+.mk.on{background:var(--c)}
+.mk.on .ico{opacity:1}
+.bar{position:relative;height:12px;border-radius:6px;background:var(--soft);margin:12px 0}
+.bar span{display:block;height:100%;border-radius:6px;background:var(--c);transition:width .3s}
+.bar i{position:absolute;top:-5px;bottom:-5px;width:3px;background:var(--text);border-radius:2px}
+.nctrl{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+
+/* Check-in */
+.sl{margin:4px 0 14px}
+.sl-h{display:flex;justify-content:space-between;align-items:baseline;font-weight:800}
+.sl-h output{font-size:24px;font-weight:800}
+.slider{position:relative;height:52px;touch-action:pan-y;cursor:pointer;outline:none}
+.slider .track{position:absolute;left:22px;right:22px;top:22px;height:8px;border-radius:4px;background:var(--soft)}
+.slider .fill{height:100%;width:calc(var(--v) * 10%);background:var(--c);border-radius:4px}
+.slider .thumb{position:absolute;top:10px;left:calc(22px + (100% - 44px) * var(--v) / 10 - 16px);width:32px;height:32px;border-radius:50%;background:var(--card);border:3px solid var(--c);box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.slider.hi .thumb{border-width:8px}
+.slider:focus-visible .thumb{outline:3px solid var(--text);outline-offset:2px}
+.ticks{display:flex;justify-content:space-between;padding:0 15px;color:var(--muted);font-size:15px;font-variant-numeric:tabular-nums}
+.ticks span{width:14px;text-align:center}
+.warn{background:var(--cond-t);border-left:6px solid var(--cond);padding:12px 14px;border-radius:10px;font-weight:700;margin:4px 0 12px;color:var(--text)}
+.warn[hidden]{display:none}
+.weigh{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:6px 0 16px}
+.weigh .wh{grid-column:1/-1;display:flex;gap:10px;align-items:center;font-weight:800}
+.fld{display:flex;flex-direction:column;gap:6px;font-weight:700}
+.inp{display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);border-radius:12px;padding:0 12px;background:var(--card)}
+.inp input{border:0;background:transparent;height:52px;width:100%;font-weight:800;min-width:0}
+.inp span{color:var(--muted)}
+
+/* Banners */
+.banner{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:16px;margin-bottom:16px;background:var(--card);font-weight:800;border:2.5px solid var(--c)}
+.banner .ico{color:var(--c)}
+
+/* Week */
+.wk-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.wk-h h2{font-size:22px}
+.dots{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cell{display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 0;border-radius:12px;min-height:44px}
+.wd{font-size:15px;font-weight:800;color:var(--muted)}
+.dot{width:44px;height:44px;border-radius:50%;border:3px solid var(--c);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.dot .ico{width:24px;height:24px;stroke-width:3}
+.st-done{background:var(--c)}
+.st-part{background:linear-gradient(to top,var(--c) 50%,transparent 50%)}
+.st-up{border-style:dashed;border-color:var(--muted)}
+.st-moved{border-style:dashed;color:var(--c)}
+.is-today .dot{box-shadow:0 0 0 3px var(--card),0 0 0 6px var(--text)}
+.lbl{font-size:15px;font-weight:800;text-align:center;line-height:1.2}
+.legend{display:flex;flex-wrap:wrap;gap:14px 24px}
+.lg{display:flex;align-items:center;gap:10px;font-weight:700}
+.lg .dot{width:32px;height:32px}
+.lg .dot .ico{width:18px;height:18px}
+.hint{color:var(--muted);margin-top:8px}
+
+/* Progress */
+.charts{display:grid;gap:16px}
+.charts.two{grid-template-columns:1fr 1fr}
+.charts .card{margin-bottom:0}
+.ch-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:6px}
+.ch-h h3{font-size:20px}
+.latest{font-weight:800}
+.chart{width:100%;height:auto;display:block}
+.chart .ax{fill:var(--muted);font-size:13px;font-family:inherit}
+.chart .gl{stroke:var(--line);stroke-width:1}
+.chart .ln{fill:none;stroke:var(--c);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.chart .pt{fill:var(--card);stroke:var(--c);stroke-width:2.5}
+.chart .th{stroke:var(--cond);stroke-dasharray:5 5;stroke-width:2}
+.empty{color:var(--muted)}
+
+/* Settings */
+.field{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+.field > .fl{font-weight:800}
+.ctl{min-height:52px;border:1.5px solid var(--line);border-radius:12px;padding:0 14px;background:var(--card);width:100%;max-width:380px;-webkit-appearance:none;appearance:none}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.danger{color:var(--danger);border-color:var(--danger)}
+.btnrow{display:flex;flex-wrap:wrap;gap:10px}
+
+/* Tabs */
+#tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;justify-content:center;gap:6px;
+  padding:6px max(12px,env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));
+  background:var(--card);background:color-mix(in srgb,var(--card) 90%,transparent);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-top:1px solid var(--line)}
+#tabs button{flex:1;max-width:200px;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:16px;font-weight:800;color:var(--muted);border-radius:14px}
+#tabs button[aria-current="page"]{color:var(--text);background:var(--soft)}
+
+/* Sheet, toast, celebration */
+#sheet{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:20px}
+#sheet[hidden]{display:none}
+.sheet-bg{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.sheet-panel{position:relative;background:var(--card);border-radius:22px;padding:24px;max-width:580px;width:100%;max-height:86vh;overflow:auto}
+.sheet-panel h2{font-size:26px;margin-bottom:6px}
+.rule{display:flex;gap:14px;margin:16px 0;align-items:flex-start}
+.rule p{margin-top:2px}
+#toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--text);color:var(--bg);padding:12px 20px;border-radius:14px;font-weight:800;z-index:40;max-width:90vw;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.show{opacity:1}
+.celebrate{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:rgba(0,0,0,.3);padding:20px}
+.cel-card{background:var(--card);border-top:8px solid var(--sun2);border-radius:24px;padding:28px 40px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.3);animation:rise .35s ease}
+.cel-big{font-size:32px;font-weight:800;margin-bottom:4px}
+.conf{position:fixed;top:-24px;width:10px;height:16px;border-radius:3px;background:var(--c);animation:fall 1.9s ease-in forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(560deg)}}
+@keyframes rise{from{transform:translateY(16px);opacity:0}}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media (max-width:600px){.ex-ctrl{padding-left:14px}.top h1{font-size:26px}.pill{font-size:21px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<nav id="tabs" aria-label="Sections"></nav>
+<div id="sheet" hidden></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="importFile" accept="application/json,.json" hidden>
+<script>
+(() => {
+'use strict';
+const KEY = 'dailyTrainer.v1';
+const DAY = 86400000;
+const $ = s => document.querySelector(s);
+const app = $('#app'), sheet = $('#sheet');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+const landscape = matchMedia('(orientation: landscape) and (min-width: 960px)');
+const PAIN_MSG = 'Above 3 today: lower the weight, shorten the range, or swap the exercise.';
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+/* ---------- Dates (local calendar days) ---------- */
+const pad = n => String(n).padStart(2, '0');
+const keyOf = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const todayKey = () => keyOf(new Date());
+const parseKey = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); };
+const dayNum = k => { const [y, m, d] = k.split('-').map(Number); return Math.round(Date.UTC(y, m - 1, d) / DAY); };
+const keyFromNum = n => { const d = new Date(n * DAY); return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`; };
+const addDays = (k, n) => keyFromNum(dayNum(k) + n);
+const weekday = k => new Date(dayNum(k) * DAY).getUTCDay();
+const fmtLong = k => parseKey(k).toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+const fmtShort = k => parseKey(k).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+const fmtMD = k => parseKey(k).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const round1 = v => Math.round(v * 10) / 10;
+
+/* ---------- Storage ---------- */
+const defaults = () => ({
+  v: 1,
+  settings: { startDate: todayKey(), weighDay: 1, phaseLog: [], classDays: [2, 4, 6], waterGoal: 8, step: 5, lastExport: null, theme: 'light' },
+  moved: [], days: {}, readiness: {}
+});
+function merge(o) {
+  const d = defaults();
+  return { ...d, ...o, settings: { ...d.settings, ...(o.settings || {}) },
+    moved: Array.isArray(o.moved) ? o.moved : [], days: o.days || {}, readiness: o.readiness || {} };
+}
+function load() { try { const raw = localStorage.getItem(KEY); if (raw) return merge(JSON.parse(raw)); } catch (e) {} return defaults(); }
+let data = load();
+function save() { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) { toast('Could not save. Export a backup in Settings.'); } }
+const EMPTY = Object.freeze({});
+const rec = k => data.days[k] || EMPTY;
+function recW(k) {
+  const r = data.days[k] || (data.days[k] = {});
+  r.c = r.c || {}; r.sets = r.sets || {}; r.wt = r.wt || {}; r.top = r.top || {};
+  return r;
+}
+let keysCache = null;
+const sortedKeys = () => keysCache || (keysCache = Object.keys(data.days).sort());
+
+/* ---------- Icons ---------- */
+const IC = {
+  home: '<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  gym: '<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/>',
+  cond: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  nut: '<path d="M5 21c0-9 6-15 15-16-1 9-7 15-15 16zM5 21l8-8"/>',
+  chk: '<path d="M3 12h4l2.5-6 4 12 2.5-6H21"/>',
+  rest: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+  walk: '<ellipse cx="8.5" cy="8" rx="2.6" ry="4"/><ellipse cx="15.5" cy="15.5" rx="2.6" ry="4"/>',
+  glove: '<path d="M7 4h7a4 4 0 0 1 4 4v5a5 5 0 0 1-5 5H9a3 3 0 0 1-3-3v-2H5a2 2 0 0 1 0-4h1V5a1 1 0 0 1 1-1zM8 18v3h7v-3"/>',
+  check: '<path d="M5 12.5 10 17.5 19 7"/>',
+  arrow: '<path d="M5 12h13M13 6l6 6-6 6"/>',
+  undo: '<path d="M9 14 4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3"/>',
+  up: '<path d="M12 19V5M6 11l6-6 6 6"/>',
+  today: '<rect x="3.5" y="4.5" width="17" height="16" rx="3"/><path d="M3.5 9.5h17M8 3v3M16 3v3M8.5 14.5l2.5 2.5 4.5-5"/>',
+  week: '<circle cx="5.5" cy="8" r="2"/><circle cx="12" cy="8" r="2"/><circle cx="18.5" cy="8" r="2"/><circle cx="5.5" cy="16" r="2"/><circle cx="12" cy="16" r="2"/><circle cx="18.5" cy="16" r="2"/>',
+  prog: '<path d="M3 20h18M5 16l4-5 4 3 6-8"/>',
+  set: '<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>',
+  save: '<path d="M12 3v12M7 10l5 5 5-5M4 20h16"/>',
+  open: '<path d="M12 15V3M7 8l5-5 5 5M4 20h16"/>',
+  play: '<path d="M7 4.5v15l12.5-7.5z"/>'
+};
+const icon = n => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
+
+/* ---------- Program content ---------- */
+const HOME = [
+  { id: 'h_balance', n: 'Single-leg balance', d: '3 × 30 sec each side', cue: 'Harder: eyes closed, then standing on a pillow' },
+  { id: 'h_calf_str', n: 'Straight-knee calf raise', d: '2 × 15 slow' },
+  { id: 'h_calf_bent', n: 'Bent-knee calf raise', d: '2 × 15' },
+  { id: 'h_tib', n: 'Tibialis raise', d: '2 × 15', cue: 'Back against the wall' },
+  { id: 'h_ankle', n: 'Knee-to-wall ankle stretch', d: '10 each side' },
+  { id: 'h_wallsit', n: 'Wall sit', d: '3 × 30 to 45 sec', cue: 'Only as low as the knee stays at 3/10 or less' },
+  { id: 'h_side', n: 'Side-lying leg raise', d: '2 × 15 each side' }
+];
+const E = (id, n, sets, reps, cue, w) => ({ id, n, sets, reps, cue, w: !!w });
+function workout(letter, phase) {
+  const p2 = phase >= 2, main = p2 ? '6-10' : '10-12';
+  if (letter === 'A') return [
+    E('leg_press', 'Leg press', 3, main, 'Pain-free depth only', 1),
+    ...(p2 ? [E('step_up', 'Step-up', 3, '8 per leg', '6 to 12 inch box', 1)] : []),
+    E('chest_press', 'Chest press machine', 3, main, 'Neutral handles', 1),
+    E('row', 'Seated cable row', 3, main, 'V-handle', 1),
+    p2 ? E('back_ext', '45° back extension', 2, '10-12', 'Hold a light plate against your chest', 1)
+       : E('back_ext', '45° back extension', 2, '10-12', 'Arms crossed on chest', 0),
+    E('calf_raise', 'Standing calf raise', 2, '12-15', 'Pause at the top', 1),
+    E('dead_bug', 'Dead bug', 2, '8 per side', 'Low back flat', 0)
+  ];
+  return [
+    p2 ? E('goblet_squat', 'Goblet squat', 3, '6-10', 'Cup the dumbbell with both palms', 1)
+       : E('box_squat', 'Box squat to bench', 3, '8-10', 'Bodyweight. Higher box if the knee complains', 0),
+    E('leg_ext', 'Leg extension', 3, '12-15', 'Light, first half of the range only', 1),
+    E('ham_curl', 'Hamstring curl machine', 3, '10-12', 'Slow on the way down', 1),
+    E('pulldown', 'Lat pulldown', 3, main, 'Neutral grip', 1),
+    ...(p2 ? [E('shoulder_press', 'Machine shoulder press', 3, '8-10', 'Neutral handles', 1)] : []),
+    E('hip_abd', 'Hip abduction machine', 2, '15', 'Smooth reps, no swinging', 1),
+    E('pallof', 'Pallof press', 2, '10 per side', 'Light', 1)
+  ];
+}
+function impact(w) {
+  if (w <= 6) return { n: 'Heel drops', d: '3 × 10', how: { q: 'heel drops exercise impact loading', steps: ['Stand tall and rise up onto your toes.', 'Let your heels drop to the floor with a light thump.', 'Knees soft, stay tall. It should feel easy and springy.'] } };
+  if (w <= 8) return { n: 'Step-off landings', d: '3 × 8 from a 6 inch step', how: { q: 'step off landing drill soft landing' + PT, steps: ['Step off a 6 inch step. Don\'t jump off it.', 'Land on both feet, quiet and soft, knees bending.', 'Knees track over your toes. Hold the landing for 2 seconds.'] } };
+  return { n: 'Pogo hops, then jump rope', d: 'Pogo hops 3 × 10, then rope 5 × 30 sec', how: { q: 'pogo hops jump rope beginner', steps: ['Pogo hops: small, quick bounces off the balls of your feet. Knees mostly straight but not locked.', 'Stay low to the ground. Quiet landings.', 'Jump rope: just high enough to clear the rope, wrists turn it, elbows stay close.'] } };
+}
+function conditioning(p, w) {
+  if (p === 1) return { n: 'Pool or bike', d: 'Easy pace, 20 to 30 min' };
+  const cue = 'On the bike. Pool is still fine on easy days.';
+  if (w <= 6) return { n: 'Bike intervals', d: '6 × 30 sec hard, 90 sec easy', cue };
+  if (w <= 8) return { n: 'Bike intervals', d: '3 rounds: 2 min hard, 1 min easy', cue };
+  return { n: 'Bike intervals', d: '3 to 5 rounds: 3 min hard, 1 min easy', cue };
+}
+const READY = [
+  ['r_bike', '3 rounds of 3 min hard on the bike with 1 min rest'],
+  ['r_calf', '20 slow single-leg calf raises on each leg'],
+  ['r_bal', '30 sec single-leg balance with eyes closed on each leg'],
+  ['r_rope', '2 min of light jump rope with no pain the next day'],
+  ['r_knee', 'Stairs and a bodyweight squat at 2/10 or less on the left knee'],
+  ['r_thumb', 'Thumb checked by a PT, and I know how to wrap it']
+];
+
+
+/* How-to guides: short form steps (offline) plus a YouTube search for video demos (needs internet) */
+const PT = ' physical therapist';
+const HOW = {
+  h_balance: { q: 'single leg balance exercise' + PT, steps: ['Stand next to a counter so you can grab it if you wobble.', 'Lift one foot. Keep a tiny bend in the standing knee.', 'Hips level, eyes on one spot on the wall.', 'Harder: close your eyes. Hardest: stand on a pillow.'] },
+  h_calf_str: { q: 'straight knee calf raise slow' + PT, steps: ['Stand tall with knees straight. Fingertips on a wall for balance only.', 'Rise up onto the balls of your feet as high as you can.', 'Pause at the top, then take about 3 seconds to lower.'] },
+  h_calf_bent: { q: 'bent knee calf raise soleus' + PT, steps: ['Bend your knees a little, like a small squat, and hold that bend the whole set.', 'Rise up onto the balls of your feet, pause, lower slowly.', 'This one works the deeper calf muscle that takes a lot of load when you run and kick.'] },
+  h_tib: { q: 'tibialis raise against wall', steps: ['Back and butt against the wall, heels about a foot out from it.', 'Keep heels down and pull your toes up toward your shins.', 'Pause at the top, lower slowly. You should feel it on the front of your shins.'] },
+  h_ankle: { q: 'knee to wall ankle dorsiflexion stretch', steps: ['Face a wall with one foot a few inches away from it.', 'Push that knee forward to touch the wall. The heel stays down.', 'If the heel lifts, scoot closer. If it is easy, scoot back. Do 10 smooth reps per side.'] },
+  h_wallsit: { q: 'wall sit proper form knee pain' + PT, steps: ['Back flat on the wall, feet shoulder width and out in front of you.', 'Slide down only as far as the knee stays at 3/10 or less. A shallow sit still counts.', 'Knees point the same way as your toes. Weight stays in your heels.'] },
+  h_side: { q: 'side lying leg raise hip abduction' + PT, steps: ['Lie on your side, bottom knee bent for balance.', 'Top leg straight, toes pointing forward, not up at the ceiling.', 'Lift to about 30 to 45 degrees, lower slowly. Don\'t roll your hips back.'] },
+  leg_press: { q: 'leg press machine proper form' + PT, steps: ['Feet shoulder width in the middle of the platform.', 'Lower until just before pain or until your low back wants to peel off the pad. Stop there.', 'Press through your whole foot. Don\'t snap the knees straight at the top.'] },
+  chest_press: { q: 'seated chest press machine neutral grip form', steps: ['Set the seat so the handles line up with the middle of your chest.', 'Shoulder blades back against the pad and keep them there.', 'Press out, stop just short of locking the elbows, come back slow.'] },
+  row: { q: 'seated cable row v handle form', steps: ['Sit tall with a slight bend in the knees.', 'Pull the handle to your lower ribs and squeeze your shoulder blades together.', 'Your torso stays still. Don\'t rock back to move the weight.'] },
+  back_ext: { q: '45 degree back extension hip hinge form', steps: ['Set the pad just below your hip bones so you can bend at the hips.', 'Lower by hinging at the hips with a flat back.', 'Come up to a straight line from head to heels. Don\'t lean back past it.'] },
+  calf_raise: { q: 'standing calf raise machine form', steps: ['Balls of your feet on the edge, heels hanging free.', 'Lower into a comfortable stretch.', 'Rise as high as you can and hold the top for a full second.'] },
+  dead_bug: { q: 'dead bug exercise low back flat' + PT, steps: ['Lie on your back, arms straight up, knees bent 90 degrees above your hips.', 'Press your low back into the floor and keep it there.', 'Slowly reach one arm and the opposite leg out, come back, switch sides.', 'If your back starts to arch, shorten the reach.'] },
+  box_squat: { q: 'box squat to bench bodyweight' + PT, steps: ['Stand in front of a bench with feet about shoulder width.', 'Sit back and down until you lightly touch the bench. Don\'t plop.', 'Stand up through your heels. Use a higher box if the knee complains.'] },
+  goblet_squat: { q: 'goblet squat dumbbell form', steps: ['Hold one dumbbell upright against your chest, cupping the top end with both palms.', 'Squat down between your hips with your chest up.', 'Knees track over your toes. Go only as deep as pain allows.'] },
+  leg_ext: { q: 'leg extension machine form knee' + PT, steps: ['Line your knee up with the machine\'s pivot point. Pad sits on your lower shin.', 'Keep it light and stay in the partial range on your plan.', 'Smooth reps, no kicking or swinging.'] },
+  ham_curl: { q: 'seated hamstring curl machine form', steps: ['Line your knee up with the pivot. Pad sits just above your heel.', 'Curl the pad down and back, squeeze for a beat.', 'Take your time letting it back up.'] },
+  pulldown: { q: 'lat pulldown neutral grip form', steps: ['Thighs locked under the pad.', 'Pull the handle to your upper chest, elbows driving down and in.', 'A small lean back is fine. Don\'t yank or swing.'] },
+  hip_abd: { q: 'hip abduction machine form', steps: ['Sit tall with your back against the pad.', 'Push your knees out, pause.', 'Let them come back in slowly without the weights slamming.'] },
+  pallof: { q: 'pallof press cable form', steps: ['Stand sideways to the cable, handle at the middle of your chest.', 'Press straight out and don\'t let the cable twist you.', 'Hold for a beat, bring it back in. Do both sides.'] },
+  step_up: { q: 'step up exercise knee friendly' + PT, steps: ['Put your whole foot on the box.', 'Drive up through the heel of the top leg. Barely push off with the bottom leg.', 'Lower slowly. The knee tracks over your toes.'] },
+  shoulder_press: { q: 'seated machine shoulder press neutral grip form', steps: ['Set the seat so the handles start near shoulder height.', 'Press up without shrugging. Keep your ribs down.', 'Lower with control.'] },
+  g_wrap: { q: 'how to wrap hands muay thai beginner', steps: ['Thumb through the loop, then lay the wrap across the back of your hand.', 'A few loops around the wrist, then around the knuckles.', 'Weave between the fingers, then finish back at the wrist.', 'Snug, not tight. Tingling fingers means redo it looser.'] }
+};
+const howFor = it => it.how || HOW[it.ex ? it.ex.id : it.id] || null;
+
+/* ---------- Schedule ---------- */
+const weekOf = k => Math.floor((dayNum(k) - dayNum(data.settings.startDate)) / 7) + 1;
+function modeFor(k) { let m = 'auto'; for (const e of (data.settings.phaseLog || [])) if (e.from <= k) m = e.mode; return m; }
+function phaseOf(k) { const m = modeFor(k); if (m !== 'auto') return Number(m); return weekOf(k) <= 4 ? 1 : 2; }
+function baseType(k) {
+  const wd = weekday(k);
+  if (phaseOf(k) === 3) {
+    if (wd === 1 || wd === 5) return 'lift';
+    return data.settings.classDays.includes(wd) ? 'class' : 'rest';
+  }
+  return ({ 1: 'lift', 2: 'cond', 3: 'lift', 4: 'cond', 5: 'lift', 6: 'walk', 0: 'rest' })[wd];
+}
+// Walks day by day from the start date. A moved session waits in a queue and gets
+// done on the next day; the backlog is absorbed by the next walk or rest day.
+// A/B letters are assigned when a lift is actually scheduled, so moves never break alternation.
+let schedCache = null;
+function schedule() {
+  if (schedCache) return schedCache;
+  const out = {}, start = data.settings.startDate, moved = new Set(data.moved);
+  const endN = Math.max(dayNum(todayKey()), dayNum(state.view), dayNum(start)) + 21;
+  let queue = [], lifts = 0;
+  for (let n = dayNum(start); n <= endN; n++) {
+    const k = keyFromNum(n), base = baseType(k);
+    let t;
+    if (queue.length) {
+      if (base === 'rest' || base === 'walk') t = queue.shift();
+      else { queue.push(base); t = queue.shift(); }
+    } else t = base;
+    if (moved.has(k) && t !== 'rest' && t !== 'walk') { queue.unshift(t); out[k] = { type: 'moved' }; continue; }
+    const e = { type: t };
+    if (t === 'lift') { e.letter = lifts % 2 === 0 ? 'A' : 'B'; lifts++; }
+    out[k] = e;
+  }
+  return (schedCache = out);
+}
+function sessionInfo(k) {
+  const e = k < data.settings.startDate ? { type: 'pre' } : (schedule()[k] || { type: baseType(k) });
+  const p = phaseOf(k);
+  const m = {
+    lift: { cat: 'gym', ic: 'gym', label: 'Lift ' + (e.letter || 'A'), short: 'Lift ' + (e.letter || 'A') },
+    cond: { cat: 'cond', ic: 'cond', label: p === 1 ? 'Pool or bike' : 'Bike intervals', short: 'Cardio' },
+    class: { cat: 'cond', ic: 'glove', label: 'Muay Thai', short: 'Class' },
+    walk: { cat: 'rest', ic: 'walk', label: 'Easy walk', short: 'Walk' },
+    moved: { cat: 'rest', ic: 'arrow', label: 'Moved', short: 'Moved' },
+    pre: { cat: 'rest', ic: 'rest', label: 'Not started', short: '' },
+    rest: { cat: 'rest', ic: 'rest', label: 'Rest', short: 'Rest' }
+  }[e.type];
+  return { ...e, ...m };
+}
+
+/* ---------- Day model ---------- */
+function buildDay(k) {
+  const s = sessionInfo(k), p = phaseOf(k), w = weekOf(k);
+  let gym;
+  switch (s.type) {
+    case 'lift': {
+      const items = [{ id: 'g_warm', n: 'Warm-up', d: 'Bike 5 to 8 min, then wall sit 2 × 30 sec' }];
+      if (p === 2) { const im = impact(w); items.push({ id: 'g_impact', n: 'Impact: ' + im.n, d: im.d, how: im.how, cue: 'Move up a level only if knee and ankles are 3/10 or less the next morning' }); }
+      workout(s.letter, p).forEach(e => items.push({ id: 'ex_' + e.id, ex: e }));
+      items.push({ id: 'g_cool', n: 'Easy bike', d: '10 min', optional: true });
+      gym = { cat: 'gym', ic: 'gym', title: 'Gym session', items };
+      break;
+    }
+    case 'cond': { const c = conditioning(p, w); gym = { cat: 'cond', ic: 'cond', title: 'Conditioning', items: [{ id: 'g_cond', n: c.n, d: c.d, cue: c.cue }] }; break; }
+    case 'class': gym = { cat: 'cond', ic: 'glove', title: 'Muay Thai class', items: [{ id: 'g_wrap', n: 'Wrap hands, use the thumb loop' }, { id: 'g_class', n: 'Muay Thai class' }] }; break;
+    case 'walk': gym = { cat: 'rest', ic: 'walk', title: 'Easy walk', items: [{ id: 'g_walk', n: 'Easy walk', d: 'Any easy pace', optional: true }], note: 'Optional today. A walk is a bonus.' }; break;
+    case 'moved': gym = { cat: 'rest', ic: 'rest', title: 'Moved to tomorrow', items: [], note: "Today's session moves to tomorrow. Enjoy the break." }; break;
+    case 'pre': gym = { cat: 'rest', ic: 'rest', title: 'Not started', items: [], note: `Your plan starts ${fmtLong(data.settings.startDate)}. You can change that in Settings.` }; break;
+    default: gym = { cat: 'rest', ic: 'rest', title: 'Rest day', items: [], note: 'Rest is part of the plan.' };
+  }
+  return { home: HOME, gym, weigh: weekday(k) === Number(data.settings.weighDay) };
+}
+function isDoneItem(it, r) {
+  if (it.ex) { const s = (r.sets || {})[it.ex.id] || []; for (let i = 0; i < it.ex.sets; i++) if (!s[i]) return false; return true; }
+  return !!(r.c || {})[it.id];
+}
+function isDoneId(id, r) {
+  switch (id) {
+    case 'n_protein': return (r.protein || 0) >= 150;
+    case 'n_water': return (r.water || 0) >= data.settings.waterGoal;
+    case 'n_sleep': return r.sleep != null;
+    case 'c_pain': return !!r.checkin;
+    case 'c_weigh': return r.bw != null && r.waist != null;
+  }
+  return false;
+}
+function progress(k, day = buildDay(k)) {
+  const r = rec(k);
+  const items = [...day.home, ...day.gym.items.filter(i => !i.optional)];
+  const extra = ['n_protein', 'n_water', 'n_sleep', 'c_pain'].concat(day.weigh ? ['c_weigh'] : []);
+  const done = items.filter(i => isDoneItem(i, r)).length + extra.filter(id => isDoneId(id, r)).length;
+  return { done, total: items.length + extra.length };
+}
+const isComplete = k => { const p = progress(k); return p.total > 0 && p.done >= p.total; };
+function streak(k) { let n = 0, d = k; while (data.days[d] && isComplete(d) && n < 3650) { n++; d = addDays(d, -1); } return n; }
+function lastWeight(id, k) {
+  const keys = sortedKeys();
+  for (let i = keys.length - 1; i >= 0; i--) {
+    const kk = keys[i]; if (kk >= k) continue;
+    const r = data.days[kk];
+    if (r.wt && r.wt[id] != null) return { w: r.wt[id], top: !!(r.top && r.top[id]) };
+  }
+  return null;
+}
+function curWeight(id, k, r) {
+  if (r.wt && r.wt[id] != null) return r.wt[id];
+  const L = lastWeight(id, k);
+  return L ? (L.top ? round1(L.w + data.settings.step) : L.w) : 0;
+}
+const fmtW = w => (w > 0 ? `${w} lb` : 'bodyweight');
+function painFor(k) {
+  const r = data.days[k]; if (r && r.pain) return r.pain;
+  const keys = sortedKeys();
+  for (let i = keys.length - 1; i >= 0; i--) { const kk = keys[i]; if (kk < k && data.days[kk].pain) return data.days[kk].pain; }
+  return { knee: 0, thumb: 0, ankle: 0 };
+}
+function findEx(k, id) { const it = buildDay(k).gym.items.find(i => i.ex && i.ex.id === id); return it && it.ex; }
+function ensureWt(r, k, e) { if (e.w && r.wt[e.id] == null) r.wt[e.id] = curWeight(e.id, k, r); }
+
+/* ---------- State and rendering ---------- */
+const state = { tab: 'today', view: todayKey(), today: todayKey(), just: null, ringFrom: {} };
+
+function captureRects() {
+  if (reduce.matches) return null;
+  const m = new Map();
+  app.querySelectorAll('[data-k]').forEach(el => m.set(el.dataset.k, el.getBoundingClientRect().top));
+  return m;
+}
+function flip(m) {
+  if (!m) return;
+  app.querySelectorAll('[data-k]').forEach(el => {
+    const old = m.get(el.dataset.k); if (old == null) return;
+    const dy = old - el.getBoundingClientRect().top; if (Math.abs(dy) < 1) return;
+    el.style.transition = 'none'; el.style.transform = `translateY(${dy}px)`;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      el.style.transition = 'transform .34s cubic-bezier(.2,.8,.2,1)'; el.style.transform = '';
+    }));
+  });
+}
+function render(noFlip) {
+  schedCache = null; keysCache = null;
+  const rects = noFlip ? null : captureRects();
+  app.innerHTML = state.tab === 'today' ? viewToday() : state.tab === 'week' ? viewWeek() : state.tab === 'progress' ? viewProgress() : viewSettings();
+  document.querySelectorAll('#tabs button').forEach(b => b.setAttribute('aria-current', b.dataset.tab === state.tab ? 'page' : 'false'));
+  flip(rects);
+  const fg = document.getElementById('ringfg');
+  if (fg) requestAnimationFrame(() => requestAnimationFrame(() => { fg.style.strokeDashoffset = fg.dataset.to; }));
+  if (state.just) { const el = app.querySelector(`[data-k="${state.just}"]`); if (el && el.classList.contains('done')) el.classList.add('just'); state.just = null; }
+}
+
+/* Today */
+function viewToday() {
+  const k = state.view, t = todayKey(), isToday = k === t;
+  const s = sessionInfo(k), day = buildDay(k), r = rec(k);
+  const p = progress(k, day);
+  const pct = p.total ? p.done / p.total : 0;
+  const from = state.ringFrom[k] != null ? state.ringFrom[k] : pct;
+  state.ringFrom[k] = pct;
+  const C = 2 * Math.PI * 26;
+  const w = weekOf(k), ph = phaseOf(k);
+  const metaTxt = k < data.settings.startDate ? `Plan starts ${fmtShort(data.settings.startDate)}` : `Week ${w} · Phase ${ph}${ph === 3 ? ': Muay Thai' : ''}`;
+  let h = `<header class="top c-${s.cat}">
+    <div class="top-text">
+      <p class="date">${fmtLong(k)}</p>
+      <h1><span class="pill">${icon(s.ic)}${s.label}</span></h1>
+      <p class="meta">${metaTxt}</p>
+    </div>
+    <div class="ring" role="img" aria-label="${p.done} of ${p.total} done">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="sunset" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--sun1)"/><stop offset=".55" stop-color="var(--sun2)"/><stop offset="1" stop-color="var(--sun3)"/></linearGradient></defs><circle class="ring-bg" cx="32" cy="32" r="26"/><circle class="ring-fg" id="ringfg" cx="32" cy="32" r="26" stroke-dasharray="${C.toFixed(2)}" style="stroke-dashoffset:${(C * (1 - from)).toFixed(2)}" data-to="${(C * (1 - pct)).toFixed(2)}" transform="rotate(-90 32 32)"/></svg>
+      <span class="ring-t" aria-hidden="true">${p.done}/${p.total}</span>
+    </div>
+    <button class="icon-btn" data-act="info" aria-label="Rules">i</button>
+  </header>`;
+  if (!isToday) h += `<div class="banner c-rest">${icon('today')}<span style="flex:1">Viewing ${fmtShort(k)}</span><button class="ghost" data-act="backtoday">Back to today</button></div>`;
+  if (p.total && p.done >= p.total) {
+    const n = streak(k);
+    h += `<div class="banner c-nut" role="status">${icon('check')}<span>All done${isToday ? ' today' : ''}. ${n > 1 ? `${n} days in a row.` : 'Nice work.'}</span></div>`;
+  }
+  const home = listCard('home', 'Home routine', day.home, r, k);
+  const gym = gymCard(day, s, r, k, isToday);
+  const nut = nutCard(r);
+  const chk = chkCard(k, r, day.weigh);
+  h += landscape.matches
+    ? `<div class="cols two"><div>${home}${nut}${chk}</div><div>${gym}</div></div>`
+    : `<div class="cols">${home}${gym}${nut}${chk}</div>`;
+  return h;
+}
+function sortItems(items, r) {
+  return items.map((it, i) => ({ it, i, d: isDoneItem(it, r) ? 1 : 0, o: it.optional ? 1 : 0 }))
+    .sort((a, b) => (a.d - b.d) || (a.o - b.o) || (a.i - b.i)).map(x => x.it);
+}
+function itemHTML(it, r, k) {
+  if (it.ex) return exHTML(it.ex, r, k);
+  const done = isDoneItem(it, r);
+  return `<li class="item${done ? ' done' : ''}" data-k="${it.id}"><div class="rowwrap">
+    <button class="row" data-act="toggle" data-id="${it.id}" aria-pressed="${done}">
+      <span class="box">${icon('check')}</span>
+      <span class="txt"><span class="nm">${it.n}${it.optional ? '<span class="tag">Optional</span>' : ''}</span>${it.d ? `<span class="dose">${it.d}</span>` : ''}${it.cue ? `<span class="cue">${it.cue}</span>` : ''}</span>
+    </button>${howBtn(it)}</div></li>`;
+}
+function howBtn(it) {
+  if (!howFor(it)) return '';
+  const id = it.ex ? it.ex.id : it.id, name = it.ex ? it.ex.n : it.n;
+  return `<button class="howbtn" data-act="how" data-id="${id}" aria-label="How to do ${name}">${icon('play')}How</button>`;
+}
+function exHTML(e, r, k) {
+  const sets = (r.sets || {})[e.id] || [];
+  const done = isDoneItem({ ex: e }, r);
+  let bubbles = '';
+  for (let i = 0; i < e.sets; i++) {
+    const on = !!sets[i];
+    bubbles += `<button class="bub${on ? ' on' : ''}" data-act="set" data-id="${e.id}" data-i="${i}" aria-pressed="${on}" aria-label="${e.n}, set ${i + 1}">${on ? icon('check') : i + 1}</button>`;
+  }
+  let wt = '';
+  const logged = (r.wt || {})[e.id];
+  if (e.w) {
+    const L = lastWeight(e.id, k), cur = curWeight(e.id, k, r), top = !!(r.top || {})[e.id];
+    wt = `<div class="wt">
+      <span class="last">${L ? `Last: ${fmtW(L.w)}` : 'No log yet'}${L && L.top ? `<span class="up">${icon('up')}Up a step</span>` : ''}</span>
+      <div class="step">
+        <button data-act="wt" data-id="${e.id}" data-d="-1" aria-label="Less weight">&minus;</button>
+        <input type="number" inputmode="decimal" step="any" min="0" data-wt="${e.id}" value="${cur}" aria-label="${e.n} weight in pounds">
+        <span class="unit">lb</span>
+        <button data-act="wt" data-id="${e.id}" data-d="1" aria-label="More weight">+</button>
+      </div>
+      <button class="chip${top ? ' on' : ''}" data-act="top" data-id="${e.id}" aria-pressed="${top}">${top ? icon('check') : ''}Top reps every set</button>
+    </div>`;
+  }
+  const doneW = done && e.w && logged != null ? ` · ${fmtW(logged)}` : '';
+  return `<li class="item ex${done ? ' done' : ''}" data-k="ex_${e.id}"><div class="rowwrap">
+    <button class="row" data-act="exall" data-id="${e.id}" aria-pressed="${done}" aria-label="${e.n}, mark all sets">
+      <span class="box">${icon('check')}</span>
+      <span class="txt"><span class="nm">${e.n}</span><span class="dose">${e.sets} × ${e.reps}${doneW}</span><span class="cue">${e.cue}</span></span>
+    </button>${howBtn({ ex: e })}</div>
+    <div class="ex-ctrl"><div class="sets" role="group" aria-label="${e.n} sets">${bubbles}</div>${wt}</div>
+  </li>`;
+}
+function cardHead(cat, ic, title, dn, tot) {
+  return `<h2 class="card-h"><span class="badge">${icon(ic)}</span>${title}${tot ? `<span class="count" aria-label="${dn} of ${tot} done">${dn}/${tot}</span>` : ''}</h2>`;
+}
+function listCard(cat, title, items, r, k) {
+  const req = items.filter(i => !i.optional), dn = req.filter(i => isDoneItem(i, r)).length;
+  return `<section class="card c-${cat}">${cardHead(cat, cat, title, dn, req.length)}<ul class="list">${sortItems(items, r).map(it => itemHTML(it, r, k)).join('')}</ul></section>`;
+}
+function gymCard(day, s, r, k, isToday) {
+  const g = day.gym, req = g.items.filter(i => !i.optional), dn = req.filter(i => isDoneItem(i, r)).length;
+  const hurt = r.pain && Object.values(r.pain).some(v => v > 3) && g.items.length;
+  let foot = '';
+  if (isToday && ['lift', 'cond', 'class'].includes(s.type)) foot = `<button class="ghost block" data-act="move">${icon('arrow')}Move to tomorrow</button>`;
+  if (isToday && s.type === 'moved') foot = `<button class="ghost block" data-act="unmove">${icon('undo')}Undo move</button>`;
+  return `<section class="card c-${g.cat}">${cardHead(g.cat, g.ic, g.title, dn, req.length)}
+    ${hurt ? `<p class="warn">${PAIN_MSG}</p>` : ''}
+    ${g.note ? `<p class="note">${g.note}</p>` : ''}
+    ${g.items.length ? `<ul class="list">${sortItems(g.items, r).map(it => itemHTML(it, r, k)).join('')}</ul>` : ''}
+    ${foot ? `<div class="foot">${foot}</div>` : ''}
+  </section>`;
+}
+const mark = d => `<span class="mk${d ? ' on' : ''}" role="img" aria-label="${d ? 'Done' : 'Not done yet'}">${icon('check')}</span>`;
+function nutCard(r) {
+  const p = r.protein || 0, w = r.water || 0, s = r.sleep, g = data.settings.waterGoal;
+  const pd = p >= 150, wd = w >= g, sd = s != null;
+  const dn = [pd, wd, sd].filter(Boolean).length;
+  return `<section class="card c-nut">${cardHead('nut', 'nut', 'Nutrition', dn, 3)}
+    <div class="nrow">
+      <div class="nhead">${mark(pd)}<span class="nm">Protein</span><span class="val">${p} g</span><span class="goal">goal 150 to 190 g</span></div>
+      <div class="bar" aria-hidden="true"><span style="width:${Math.min(100, p / 190 * 100)}%"></span><i style="left:${(150 / 190 * 100).toFixed(1)}%"></i></div>
+      <div class="nctrl"><button class="main" data-act="protein" data-d="25">+25 g</button><button class="minor" data-act="protein" data-d="-25" aria-label="Remove 25 grams">&minus;</button></div>
+    </div>
+    <div class="nrow">
+      <div class="nhead">${mark(wd)}<span class="nm">Water</span><span class="val">${w}</span><span class="goal">of ${g} glasses</span></div>
+      <div class="nctrl"><button class="main" data-act="water" data-d="1">+1 glass</button><button class="minor" data-act="water" data-d="-1" aria-label="Remove a glass">&minus;</button></div>
+    </div>
+    <div class="nrow">
+      <div class="nhead">${mark(sd)}<span class="nm">Sleep</span><span class="val">${sd ? s + ' h' : 'Not logged'}</span><span class="goal">target 7 to 9 h</span></div>
+      <div class="nctrl">${sd
+        ? `<button class="minor" data-act="sleep" data-d="-0.5" aria-label="Half hour less">&minus;</button><button class="minor" data-act="sleep" data-d="0.5" aria-label="Half hour more">+</button>`
+        : `<button class="main" data-act="sleep" data-d="0">Log sleep</button>`}</div>
+    </div>
+  </section>`;
+}
+function sliderHTML(key, label, v) {
+  return `<div class="sl">
+    <div class="sl-h"><span id="l_${key}">${label}</span><output id="o_${key}" aria-hidden="true">${v}</output></div>
+    <div class="slider${v > 3 ? ' hi' : ''}" role="slider" tabindex="0" aria-labelledby="l_${key}" aria-valuemin="0" aria-valuemax="10" aria-valuenow="${v}" data-pain="${key}" style="--v:${v}">
+      <div class="track"><div class="fill"></div></div><div class="thumb"></div>
+    </div>
+    <div class="ticks" aria-hidden="true">${Array.from({ length: 11 }, (_, i) => `<span>${i}</span>`).join('')}</div>
+  </div>`;
+}
+function chkCard(k, r, weigh) {
+  const pain = r.pain || painFor(k);
+  const high = Object.values(pain).some(v => v > 3);
+  const wd = r.bw != null && r.waist != null;
+  const tot = weigh ? 2 : 1, dn = (r.checkin ? 1 : 0) + (weigh && wd ? 1 : 0);
+  return `<section class="card c-chk">${cardHead('chk', 'chk', 'Check-in', dn, tot)}
+    ${sliderHTML('knee', 'Left knee', pain.knee)}
+    ${sliderHTML('thumb', 'Thumb', pain.thumb)}
+    ${sliderHTML('ankle', 'Ankles', pain.ankle)}
+    <p class="warn" id="painwarn" ${high ? '' : 'hidden'}>${PAIN_MSG}</p>
+    ${weigh ? `<div class="weigh">
+      <div class="wh">${mark(wd)}Weekly weigh-in</div>
+      <label class="fld">Body weight<span class="inp"><input type="number" inputmode="decimal" step="any" data-f="bw" value="${r.bw != null ? r.bw : ''}"><span>lb</span></span></label>
+      <label class="fld">Waist<span class="inp"><input type="number" inputmode="decimal" step="any" data-f="waist" value="${r.waist != null ? r.waist : ''}"><span>in</span></span></label>
+    </div>` : ''}
+    <button class="main block${r.checkin ? ' on' : ''}" data-act="checkin" aria-pressed="${!!r.checkin}">${r.checkin ? icon('check') + 'Check-in logged' : 'Log check-in'}</button>
+  </section>`;
+}
+
+/* Week */
+function dayStatus(k, t) {
+  if (k > t) return 'up';
+  const si = sessionInfo(k), r = data.days[k];
+  let st = 'none';
+  if (r) { const p = progress(k); st = p.done >= p.total ? 'done' : p.done > 0 ? 'part' : 'none'; }
+  if (si.type === 'moved' && st !== 'done') return 'moved';
+  return st;
+}
+function viewWeek() {
+  const s = data.settings, t = todayKey();
+  let h = `<header class="top"><div class="top-text"><h1>Week</h1><p class="meta">Tap a day to see it or fill it in.</p></div></header>`;
+  if (t < s.startDate) return h + `<section class="card c-rest"><p>Your plan starts ${fmtLong(s.startDate)}.</p></section>`;
+  const words = { done: 'done', part: 'partly done', none: 'not logged', up: 'coming up', moved: 'moved' };
+  for (let w = weekOf(t); w >= 1; w--) {
+    const first = addDays(s.startDate, (w - 1) * 7);
+    let cells = '', dn = 0;
+    for (let i = 0; i < 7; i++) {
+      const k = addDays(first, i), si = sessionInfo(k), st = dayStatus(k, t);
+      if (st === 'done') dn++;
+      const inner = st === 'done' ? icon('check') : st === 'moved' ? icon('arrow') : '';
+      const stWord = k === t && st === 'none' ? 'today' : words[st];
+      cells += `<button class="cell c-${si.cat}${k === t ? ' is-today' : ''}" data-act="openday" data-date="${k}" aria-label="${fmtShort(k)}, ${si.label}, ${stWord}">
+        <span class="wd">${parseKey(k).toLocaleDateString(undefined, { weekday: 'short' })}</span>
+        <span class="dot st-${st}">${inner}</span>
+        <span class="lbl">${si.short}</span></button>`;
+    }
+    h += `<section class="card"><div class="wk-h"><h2>Week ${w}</h2><span class="meta">Phase ${phaseOf(first)}</span>${dn ? `<span class="meta">${dn} done</span>` : ''}</div><div class="dots">${cells}</div></section>`;
+  }
+  h += `<section class="card"><h2 class="card-h">Key</h2><div class="legend">
+    <span class="lg c-rest"><span class="dot st-done">${icon('check')}</span>Done</span>
+    <span class="lg c-rest"><span class="dot st-part"></span>Partly done</span>
+    <span class="lg c-rest"><span class="dot"></span>Not logged</span>
+    <span class="lg"><span class="dot st-up"></span>Coming up</span>
+    <span class="lg c-rest"><span class="dot st-moved">${icon('arrow')}</span>Moved</span>
+  </div><p class="hint">Dot color matches the session: purple lift, orange cardio or class, dusk blue rest or walk. The label under each dot says which.</p></section>`;
+  return h;
+}
+
+/* Progress */
+function chart(title, unit, pts, cls, fixed) {
+  const last = pts[pts.length - 1];
+  const u = unit === '/10' ? '/10' : ' ' + unit;
+  let body;
+  if (pts.length < 2) {
+    body = `<p class="empty">${pts.length ? `One entry so far: ${last.v}${u}. The line appears after the next one.` : 'Nothing logged yet. The line appears after two entries.'}</p>`;
+  } else {
+    const W = 340, H = 170, L = 40, R = 14, T = 14, B = 28;
+    const xs = pts.map(p => dayNum(p.k)), x0 = xs[0], x1 = xs[xs.length - 1];
+    let lo = fixed ? fixed[0] : Math.min(...pts.map(p => p.v)), hi = fixed ? fixed[1] : Math.max(...pts.map(p => p.v));
+    if (!fixed) { const padv = (hi - lo) * 0.15 || Math.max(1, Math.abs(hi) * 0.03); lo -= padv; hi += padv; }
+    const X = n => L + (x1 === x0 ? 0.5 : (n - x0) / (x1 - x0)) * (W - L - R);
+    const Y = v => T + (1 - (v - lo) / (hi - lo)) * (H - T - B);
+    const d = pts.map((p, i) => `${i ? 'L' : 'M'}${X(xs[i]).toFixed(1)} ${Y(p.v).toFixed(1)}`).join(' ');
+    const dotsSvg = pts.length <= 40 ? pts.map((p, i) => `<circle class="pt" cx="${X(xs[i]).toFixed(1)}" cy="${Y(p.v).toFixed(1)}" r="3.5"/>`).join('') : '';
+    const th = fixed ? `<line class="th" x1="${L}" x2="${W - R}" y1="${Y(3)}" y2="${Y(3)}"/><text class="ax" x="${W - R}" y="${Y(3) - 4}" text-anchor="end">3</text>` : '';
+    body = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${title}: ${pts.length} entries, latest ${last.v}${u}">
+      <line class="gl" x1="${L}" x2="${W - R}" y1="${T}" y2="${T}"/><line class="gl" x1="${L}" x2="${W - R}" y1="${H - B}" y2="${H - B}"/>
+      <text class="ax" x="${L - 6}" y="${T + 4}" text-anchor="end">${round1(hi)}</text>
+      <text class="ax" x="${L - 6}" y="${H - B + 4}" text-anchor="end">${round1(lo)}</text>
+      <text class="ax" x="${L}" y="${H - 8}">${fmtMD(pts[0].k)}</text>
+      <text class="ax" x="${W - R}" y="${H - 8}" text-anchor="end">${fmtMD(last.k)}</text>
+      ${th}<path class="ln" d="${d}"/>${dotsSvg}</svg>`;
+  }
+  return `<section class="card ${cls}"><div class="ch-h"><h3>${title}</h3>${pts.length ? `<span class="latest">${last.v}${u}</span>` : ''}</div>${body}</section>`;
+}
+function viewProgress() {
+  const rd = READY.filter(([id]) => data.readiness[id]).length;
+  let h = `<header class="top"><div class="top-text"><h1>Progress</h1><p class="meta">Lines fill in as you log.</p></div></header>`;
+  h += `<section class="card c-cond">${cardHead('cond', 'glove', 'Muay Thai readiness', rd, READY.length)}
+    ${rd === READY.length ? `<p class="note">All six done. Switch to Phase 3 in Settings when classes start.</p>` : ''}
+    <ul class="list">${READY.map(([id, n]) => { const d = data.readiness[id]; return `<li class="item${d ? ' done' : ''}">
+      <button class="row" data-act="ready" data-id="${id}" aria-pressed="${!!d}"><span class="box">${icon('check')}</span>
+      <span class="txt"><span class="nm">${n}</span>${d ? `<span class="cue">Done ${fmtMD(d)}</span>` : ''}</span></button></li>`; }).join('')}</ul>
+  </section>`;
+  const S = fn => sortedKeys().map(k => ({ k, v: fn(data.days[k]) })).filter(p => typeof p.v === 'number' && isFinite(p.v));
+  const lift = id => r => (r.wt && r.wt[id] > 0 ? r.wt[id] : undefined);
+  const charts = [
+    chart('Body weight', 'lb', S(r => r.bw), 'c-chk'),
+    chart('Waist', 'in', S(r => r.waist), 'c-chk'),
+    chart('Left knee pain', '/10', S(r => (r.pain ? r.pain.knee : undefined)), 'c-chk', [0, 10]),
+    chart('Thumb pain', '/10', S(r => (r.pain ? r.pain.thumb : undefined)), 'c-chk', [0, 10]),
+    chart('Leg press', 'lb', S(lift('leg_press')), 'c-gym'),
+    chart('Chest press', 'lb', S(lift('chest_press')), 'c-gym'),
+    chart('Seated row', 'lb', S(lift('row')), 'c-gym'),
+    chart('Lat pulldown', 'lb', S(lift('pulldown')), 'c-gym')
+  ];
+  return h + `<div class="charts${landscape.matches ? ' two' : ''}">${charts.join('')}</div>`;
+}
+
+/* Settings */
+function viewSettings() {
+  const s = data.settings, mode = modeFor(todayKey());
+  const seg = [['auto', 'Auto'], ['1', 'Phase 1'], ['2', 'Phase 2'], ['3', 'Phase 3: Muay Thai']]
+    .map(([v, l]) => `<button class="chip${mode === v ? ' on' : ''}" data-act="phase" data-v="${v}" aria-pressed="${mode === v}">${mode === v ? icon('check') : ''}${l}</button>`).join('');
+  const cls = [2, 3, 4, 6, 0].map(d => { const on = s.classDays.includes(d); return `<button class="chip${on ? ' on' : ''}" data-act="classday" data-v="${d}" aria-pressed="${on}">${on ? icon('check') : ''}${DAYS[d].slice(0, 3)}</button>`; }).join('');
+  const steps = [2.5, 5, 10].map(v => `<button class="chip${s.step === v ? ' on' : ''}" data-act="stepset" data-v="${v}" aria-pressed="${s.step === v}">${s.step === v ? icon('check') : ''}${v} lb</button>`).join('');
+  const th = s.theme || 'light';
+  const themes = [['light', 'Light'], ['dark', 'Dark'], ['auto', 'Match iPad']].map(([v, l]) => `<button class="chip${th === v ? ' on' : ''}" data-act="theme" data-v="${v}" aria-pressed="${th === v}">${th === v ? icon('check') : ''}${l}</button>`).join('');
+  return `<header class="top"><div class="top-text"><h1>Settings</h1></div></header>
+  <section class="card c-gym">${cardHead('gym', 'set', 'Plan')}
+    <label class="field"><span class="fl">Start date (Week 1, Day 1)</span><input class="ctl" type="date" data-s="startDate" value="${s.startDate}"></label>
+    <label class="field"><span class="fl">Weigh-in day</span><select class="ctl" data-s="weighDay">${DAYS.map((d, i) => `<option value="${i}"${i === Number(s.weighDay) ? ' selected' : ''}>${d}</option>`).join('')}</select></label>
+    <div class="field"><span class="fl">Phase</span><div class="seg">${seg}</div><p class="hint">Auto runs Phase 1 for weeks 1 to 4 and Phase 2 from week 5. Pick Phase 3 the week classes start. Changes apply from today on.</p></div>
+    <div class="field"><span class="fl">Muay Thai class days (Phase 3)</span><div class="seg">${cls}</div><p class="hint">Phase 3 lifts stay on Monday and Friday. Other days are rest.</p></div>
+  </section>
+  <section class="card c-cond">${cardHead('cond', 'rest', 'Appearance')}
+    <div class="seg">${themes}</div>
+    <p class="hint">Light is the default. Match iPad follows your system setting.</p>
+  </section>
+  <section class="card c-nut">${cardHead('nut', 'nut', 'Tracking')}
+    <div class="field"><span class="fl">Water goal</span><div class="nctrl"><button class="minor" data-act="watergoal" data-d="-1" aria-label="Lower water goal">&minus;</button><span class="val" style="align-self:center;min-width:110px;text-align:center">${s.waterGoal} glasses</span><button class="minor" data-act="watergoal" data-d="1" aria-label="Raise water goal">+</button></div></div>
+    <div class="field"><span class="fl">Smallest weight jump</span><div class="seg">${steps}</div><p class="hint">Used by the +/&minus; buttons and the "Up a step" suggestion.</p></div>
+  </section>
+  <section class="card c-home">${cardHead('home', 'save', 'Backup')}
+    <p class="note">Everything lives on this iPad only. The Home Screen app and Safari keep separate copies, so log from the icon.${s.lastExport ? ` Last backup: ${fmtShort(s.lastExport)}.` : ''}</p>
+    <div class="btnrow"><button class="main" data-act="export">${icon('save')}Export backup</button><button class="ghost" data-act="import">${icon('open')}Import backup</button></div>
+  </section>
+  <section class="card c-rest">${cardHead('rest', 'undo', 'Start over')}
+    <p class="note">Erases all progress and settings on this iPad.</p>
+    <button class="ghost danger" data-act="reset">Reset everything</button>
+  </section>`;
+}
+
+/* ---------- Actions ---------- */
+function mutate(fn) {
+  const k = state.view, before = isComplete(k);
+  const r = recW(k); fn(r, k);
+  schedCache = null; keysCache = null;
+  save(); render();
+  if (!before && isComplete(k) && k === todayKey()) celebrate();
+}
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast.timer); toast.timer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+function celebrate() {
+  const n = streak(todayKey());
+  const el = document.createElement('div');
+  el.className = 'celebrate'; el.setAttribute('role', 'status');
+  let conf = '';
+  if (!reduce.matches) {
+    const cats = ['c-home', 'c-gym', 'c-cond', 'c-nut', 'c-chk'];
+    for (let i = 0; i < 28; i++) conf += `<span class="conf ${cats[i % 5]}" style="left:${Math.random() * 100}vw;animation-delay:${(Math.random() * 0.5).toFixed(2)}s"></span>`;
+  }
+  el.innerHTML = `<div class="cel-card"><div class="cel-big">All done!</div><div>${n > 1 ? `${n} days in a row.` : 'Day 1 of a new streak.'}</div></div>${conf}`;
+  el.addEventListener('click', () => el.remove());
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2800);
+}
+function openSheet(html, cls = 'c-gym', btn = 'main') {
+  sheet.innerHTML = `<div class="sheet-bg" data-act="close"></div><div class="sheet-panel ${cls}" role="dialog" aria-modal="true" aria-labelledby="sheet-title" tabindex="-1">${html}<button class="${btn} block" data-act="close" style="margin-top:10px">Got it</button></div>`;
+  sheet.hidden = false;
+  sheet.querySelector('.sheet-panel').focus();
+}
+function openHow(id) {
+  const day = buildDay(state.view);
+  const it = [...day.home, ...day.gym.items].find(i => (i.ex ? i.ex.id : i.id) === id);
+  const h = it && howFor(it); if (!h) return;
+  const name = it.ex ? it.ex.n : it.n, dose = it.ex ? `${it.ex.sets} × ${it.ex.reps}` : (it.d || '');
+  const cls = day.home.includes(it) ? 'c-home' : 'c-' + day.gym.cat;
+  const url = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(h.q);
+  openSheet(`<h2 id="sheet-title">${name}</h2>${dose ? `<p class="meta">${dose}</p>` : ''}
+    <ol class="how">${h.steps.map(t => `<li>${t}</li>`).join('')}</ol>
+    <a class="main block" href="${url}" target="_blank" rel="noopener">${icon('play')}Watch demos</a>
+    <p class="hint">Opens a YouTube search, so it needs signal. Clips from physical therapists are usually the safest picks.</p>`, cls, 'ghost');
+}
+function closeSheet() { sheet.hidden = true; sheet.innerHTML = ''; }
+function openRules() {
+  openSheet(`<h2 id="sheet-title">The rules</h2>
+    <div class="rule c-chk"><span class="badge">${icon('chk')}</span><div><strong>Pain</strong><p>Up to 3/10 is OK if it settles within 24 hours and isn't worse the next morning.</p></div></div>
+    <div class="rule c-gym"><span class="badge">${icon('up')}</span><div><strong>Going up</strong><p>When you hit the top of the rep range on every set, add the smallest weight jump. Tap "Top reps every set" and next time starts one step up.</p></div></div>
+    <div class="rule c-cond"><span class="badge">${icon('cond')}</span><div><strong>Impact work</strong><p>Only move up a level if knee and ankles are 3/10 or less the next morning.</p></div></div>
+    <div class="rule c-rest"><span class="badge">${icon('arrow')}</span><div><strong>Off day?</strong><p>"Move to tomorrow" slides the plan by one day. It catches up on your next rest or walk day, and A and B stay in order.</p></div></div>`);
+}
+async function exportData() {
+  const json = JSON.stringify(data, null, 1), name = `training-backup-${todayKey()}.json`;
+  const done = () => { data.settings.lastExport = todayKey(); save(); render(true); toast('Backup saved.'); };
+  try {
+    const file = new File([json], name, { type: 'application/json' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: 'Training backup' }); done(); return; }
+  } catch (e) { if (e && e.name === 'AbortError') return; }
+  const url = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
+  const a = document.createElement('a'); a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+  done();
+}
+function importData(input) {
+  const f = input.files && input.files[0]; input.value = '';
+  if (!f) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    try {
+      const o = JSON.parse(rd.result);
+      if (!o || typeof o !== 'object' || !o.days || !o.settings) throw new Error('bad');
+      if (!confirm('Replace everything on this iPad with this backup?')) return;
+      data = merge(o); save(); applyTheme(); state.view = todayKey(); state.tab = 'today'; render(true); toast('Backup restored.');
+    } catch (e) { toast("That file isn't a training backup."); }
+  };
+  rd.readAsText(f);
+}
+function setPhase(v) {
+  const t = todayKey();
+  data.settings.phaseLog = (data.settings.phaseLog || []).filter(e => e.from < t).concat([{ from: t, mode: v }]);
+  save(); render();
+  toast(v === 'auto' ? 'Phase follows the week number.' : `Phase ${v} from today.`);
+}
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const act = b.dataset.act, id = b.dataset.id;
+  switch (act) {
+    case 'toggle': state.just = id; mutate(r => { r.c[id] = !r.c[id]; }); break;
+    case 'exall': state.just = 'ex_' + id; mutate((r, k) => {
+      const ex = findEx(k, id); if (!ex) return;
+      const all = isDoneItem({ ex }, r);
+      r.sets[id] = Array(ex.sets).fill(!all);
+      if (!all) ensureWt(r, k, ex);
+    }); break;
+    case 'set': mutate((r, k) => {
+      const ex = findEx(k, id); if (!ex) return;
+      const i = Number(b.dataset.i), a = [];
+      for (let j = 0; j < ex.sets; j++) a[j] = !!(r.sets[id] || [])[j];
+      a[i] = !a[i]; r.sets[id] = a;
+      if (a[i]) ensureWt(r, k, ex);
+      if (a.every(Boolean)) state.just = 'ex_' + id;
+    }); break;
+    case 'wt': mutate((r, k) => { r.wt[id] = Math.max(0, round1(curWeight(id, k, r) + Number(b.dataset.d) * data.settings.step)); }); break;
+    case 'top': mutate(r => { r.top[id] = !r.top[id]; }); break;
+    case 'protein': mutate(r => { r.protein = clamp((r.protein || 0) + Number(b.dataset.d), 0, 400); }); break;
+    case 'water': mutate(r => { r.water = clamp((r.water || 0) + Number(b.dataset.d), 0, 30); }); break;
+    case 'sleep': mutate(r => { r.sleep = r.sleep == null ? 7 : clamp(r.sleep + Number(b.dataset.d), 0, 14); }); break;
+    case 'checkin': mutate((r, k) => { if (!r.pain) r.pain = { ...painFor(k) }; r.checkin = !r.checkin; }); break;
+    case 'move': {
+      const t = todayKey();
+      if (!data.moved.includes(t)) data.moved.push(t);
+      mutate(() => {});
+      toast(`Moved. Tomorrow: ${sessionInfo(addDays(t, 1)).label}.`);
+      break;
+    }
+    case 'unmove': data.moved = data.moved.filter(x => x !== todayKey()); mutate(() => {}); break;
+    case 'info': openRules(); break;
+    case 'how': openHow(id); break;
+    case 'close': closeSheet(); break;
+    case 'tab':
+      state.tab = b.dataset.tab;
+      if (state.tab === 'today') state.view = todayKey();
+      render(true); window.scrollTo(0, 0); break;
+    case 'openday': state.view = b.dataset.date; state.tab = 'today'; render(true); window.scrollTo(0, 0); break;
+    case 'backtoday': state.view = todayKey(); render(true); window.scrollTo(0, 0); break;
+    case 'ready': if (data.readiness[id]) delete data.readiness[id]; else data.readiness[id] = todayKey(); save(); render(); break;
+    case 'phase': setPhase(b.dataset.v); break;
+    case 'classday': {
+      const d = Number(b.dataset.v), cd = data.settings.classDays;
+      data.settings.classDays = cd.includes(d) ? cd.filter(x => x !== d) : cd.concat([d]);
+      save(); render(); break;
+    }
+    case 'theme': data.settings.theme = b.dataset.v; save(); applyTheme(); render(); break;
+    case 'stepset': data.settings.step = Number(b.dataset.v); save(); render(); break;
+    case 'watergoal': data.settings.waterGoal = clamp(data.settings.waterGoal + Number(b.dataset.d), 1, 20); save(); render(); break;
+    case 'export': exportData(); break;
+    case 'import': $('#importFile').click(); break;
+    case 'reset':
+      if (confirm("Erase all progress and settings on this iPad? Export a backup first if you might want it back.")) {
+        data = defaults(); save(); applyTheme(); state.view = todayKey(); state.tab = 'today'; state.ringFrom = {}; render(true); toast('Fresh start.');
+      }
+      break;
+  }
+});
+
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.dataset.wt) { const v = parseFloat(t.value); mutate(r => { if (isNaN(v)) delete r.wt[t.dataset.wt]; else r.wt[t.dataset.wt] = Math.max(0, round1(v)); }); }
+  else if (t.dataset.f) { const v = parseFloat(t.value); mutate(r => { r[t.dataset.f] = isNaN(v) ? null : round1(v); }); }
+  else if (t.dataset.s) {
+    const key = t.dataset.s; let v = t.value;
+    if (key === 'startDate' && !/^\d{4}-\d{2}-\d{2}$/.test(v)) return;
+    if (key === 'weighDay') v = Number(v);
+    data.settings[key] = v; save(); render(true);
+  }
+  else if (t.id === 'importFile') importData(t);
+});
+
+/* Pain sliders: tap anywhere on the track or drag sideways. Vertical swipes still scroll. */
+function setSlider(el, x) {
+  const tr = el.querySelector('.track').getBoundingClientRect();
+  setSliderVal(el, ((x - tr.left) / tr.width) * 10);
+}
+function setSliderVal(el, raw) {
+  const v = clamp(Math.round(raw), 0, 10), key = el.dataset.pain;
+  el.style.setProperty('--v', v); el.setAttribute('aria-valuenow', v); el.classList.toggle('hi', v > 3);
+  const o = document.getElementById('o_' + key); if (o) o.textContent = v;
+  const r = recW(state.view);
+  if (!r.pain) r.pain = { ...painFor(state.view) };
+  r.pain[key] = v;
+  const w = document.getElementById('painwarn'); if (w) w.hidden = !Object.values(r.pain).some(n => n > 3);
+}
+let drag = null;
+document.addEventListener('pointerdown', e => {
+  const s = e.target.closest('.slider'); if (!s) return;
+  drag = { s, id: e.pointerId, x0: e.clientX, y0: e.clientY, moving: e.pointerType === 'mouse' };
+  if (drag.moving) setSlider(s, e.clientX);
+});
+window.addEventListener('pointermove', e => {
+  if (!drag || e.pointerId !== drag.id) return;
+  if (!drag.moving) {
+    const dx = Math.abs(e.clientX - drag.x0), dy = Math.abs(e.clientY - drag.y0);
+    if (dx > 6 && dx > dy) { drag.moving = true; try { drag.s.setPointerCapture(e.pointerId); } catch (err) {} } else return;
+  }
+  setSlider(drag.s, e.clientX);
+});
+window.addEventListener('pointerup', e => {
+  if (!drag || e.pointerId !== drag.id) return;
+  setSlider(drag.s, e.clientX);
+  drag = null; save(); render();
+});
+window.addEventListener('pointercancel', () => { drag = null; });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !sheet.hidden) { closeSheet(); return; }
+  const s = e.target.closest && e.target.closest('.slider'); if (!s) return;
+  const v = Number(s.getAttribute('aria-valuenow'));
+  const nv = { ArrowLeft: v - 1, ArrowDown: v - 1, ArrowRight: v + 1, ArrowUp: v + 1, Home: 0, End: 10 }[e.key];
+  if (nv == null) return;
+  e.preventDefault(); setSliderVal(s, nv); save();
+});
+
+/* Day rollover and orientation */
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  const t = todayKey();
+  if (t !== state.today) { state.today = t; state.view = t; render(true); }
+});
+const onLayout = () => render(true);
+if (landscape.addEventListener) landscape.addEventListener('change', onLayout); else if (landscape.addListener) landscape.addListener(onLayout);
+
+/* Home Screen icon: iOS has historically wanted a PNG touch icon, so draw one at runtime too */
+try {
+  const c = document.createElement('canvas'); c.width = c.height = 180;
+  const x = c.getContext('2d');
+  const g = x.createLinearGradient(0, 0, 0, 180); g.addColorStop(0, '#f59e0b'); g.addColorStop(0.5, '#e8505b'); g.addColorStop(1, '#6d28d9');
+  x.fillStyle = g; x.fillRect(0, 0, 180, 180);
+  x.lineCap = 'round'; x.lineJoin = 'round'; x.lineWidth = 14;
+  x.strokeStyle = 'rgba(255,255,255,.35)'; x.beginPath(); x.arc(90, 90, 50, 0, Math.PI * 2); x.stroke();
+  x.strokeStyle = '#fff'; x.beginPath(); x.arc(90, 90, 50, -Math.PI / 2, Math.PI); x.stroke();
+  x.beginPath(); x.moveTo(68, 92); x.lineTo(84, 108); x.lineTo(114, 74); x.stroke();
+  const l = document.createElement('link'); l.rel = 'apple-touch-icon'; l.sizes = '180x180'; l.href = c.toDataURL('image/png');
+  document.head.appendChild(l);
+} catch (e) {}
+
+/* Optional: ask the browser to keep storage, and use sw.js for offline launch if it sits next to this file */
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) {}
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  navigator.serviceWorker.register('sw.js')
+    .then(() => navigator.serviceWorker.ready)
+    .then(reg => { if (reg.active) reg.active.postMessage({ cache: location.href.split('#')[0] }); })
+    .catch(() => {});
+}
+
+/* Theme: light by default, dark or match-iPad from Settings */
+const sysDark = matchMedia('(prefers-color-scheme: dark)');
+function applyTheme() {
+  const t = data.settings.theme || 'light';
+  document.documentElement.dataset.theme = t;
+  const dark = t === 'dark' || (t === 'auto' && sysDark.matches);
+  const m = document.getElementById('themecolor'); if (m) m.content = dark ? '#3b1c2c' : '#ffe2cc';
+}
+if (sysDark.addEventListener) sysDark.addEventListener('change', applyTheme);
+
+/* Boot */
+applyTheme();
+$('#tabs').innerHTML = [['today', 'Today', 'today'], ['week', 'Week', 'week'], ['progress', 'Progress', 'prog'], ['settings', 'Settings', 'set']]
+  .map(([t, l, i]) => `<button data-act="tab" data-tab="${t}">${icon(i)}<span>${l}</span></button>`).join('');
+if (!localStorage.getItem(KEY)) save();
+render(true);
+})();
+</script>
+</body>
+</html>
