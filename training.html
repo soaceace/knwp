@@ -120,6 +120,14 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 ol.how{margin:16px 0 18px 1.3em;display:flex;flex-direction:column;gap:10px}
 ol.how li{padding-left:4px}
 a.main{text-decoration:none}
+.swap{display:flex;gap:4px;background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:4px;margin:0 0 14px;max-width:440px}
+.swap button{flex:1;min-height:46px;border-radius:999px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:6px;color:var(--muted)}
+.swap button[aria-pressed="true"]{background:var(--text);color:var(--bg)}
+.swap .ico{width:20px;height:20px}
+.lrow{cursor:default}
+#app .card[id^="lib-"]{scroll-margin-top:12px}
+.lnum{width:32px;height:32px;border-radius:50%;background:var(--c);color:var(--on-accent);display:grid;place-items:center;font-weight:800;font-size:16px;flex:none}
+.lrow .last{margin-top:4px;font-size:17px}
 .tag{font-size:15px;font-weight:800;color:var(--muted);border:1.5px solid var(--line);border-radius:999px;padding:1px 8px;margin-left:6px;vertical-align:2px;text-decoration:none;display:inline-block}
 .just .box{animation:pop .32s ease}
 @keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
@@ -340,7 +348,8 @@ const IC = {
   set: '<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>',
   save: '<path d="M12 3v12M7 10l5 5 5-5M4 20h16"/>',
   open: '<path d="M12 15V3M7 8l5-5 5 5M4 20h16"/>',
-  play: '<path d="M7 4.5v15l12.5-7.5z"/>'
+  play: '<path d="M7 4.5v15l12.5-7.5z"/>',
+  list: '<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/>'
 };
 const icon = n => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
 
@@ -549,7 +558,7 @@ function findEx(k, id) { const it = buildDay(k).gym.items.find(i => i.ex && i.ex
 function ensureWt(r, k, e) { if (e.w && r.wt[e.id] == null) r.wt[e.id] = curWeight(e.id, k, r); }
 
 /* ---------- State and rendering ---------- */
-const state = { tab: 'today', view: todayKey(), today: todayKey(), just: null, ringFrom: {} };
+const state = { tab: 'today', view: todayKey(), today: todayKey(), just: null, ringFrom: {}, lib: false, libPhase: null };
 
 function captureRects() {
   if (reduce.matches) return null;
@@ -571,12 +580,60 @@ function flip(m) {
 function render(noFlip) {
   schedCache = null; keysCache = null;
   const rects = noFlip ? null : captureRects();
-  app.innerHTML = state.tab === 'today' ? viewToday() : state.tab === 'week' ? viewWeek() : state.tab === 'progress' ? viewProgress() : viewSettings();
+  app.innerHTML = state.tab === 'today' ? (state.lib ? viewLibrary() : viewToday()) : state.tab === 'week' ? viewWeek() : state.tab === 'progress' ? viewProgress() : viewSettings();
   document.querySelectorAll('#tabs button').forEach(b => b.setAttribute('aria-current', b.dataset.tab === state.tab ? 'page' : 'false'));
   flip(rects);
   const fg = document.getElementById('ringfg');
   if (fg) requestAnimationFrame(() => requestAnimationFrame(() => { fg.style.strokeDashoffset = fg.dataset.to; }));
   if (state.just) { const el = app.querySelector(`[data-k="${state.just}"]`); if (el && el.classList.contains('done')) el.classList.add('just'); state.just = null; }
+}
+
+
+/* All exercises: a reference list of every move, grouped by workout */
+function swapHTML() {
+  const b = (v, l, ic) => `<button data-act="lib" data-v="${v}" aria-pressed="${state.lib === v}">${icon(ic)}${l}</button>`;
+  return `<div class="swap" role="group" aria-label="View">${b(false, 'Today', 'today')}${b(true, 'All exercises', 'list')}</div>`;
+}
+function libGroups(ph) {
+  const p2 = ph >= 2, p1ids = new Set([...workout('A', 1), ...workout('B', 1)].map(e => e.id));
+  const asItem = e => ({ id: 'ex_' + e.id, ex: e, isNew: p2 && !p1ids.has(e.id) });
+  const g = [
+    { key: 'home', title: 'Home routine', sub: 'Every day', cat: 'home', ic: 'home', items: HOME },
+    { key: 'warm', title: 'Lift day warm-up', sub: 'Before Workout A or B', cat: 'gym', ic: 'gym', items: [
+      { id: 'g_warm', n: 'Warm-up', d: 'Bike 5 to 8 min, then wall sit 2 × 30 sec' },
+      { id: 'g_cool', n: 'Easy bike', d: '10 min after lifting', optional: true }] },
+    { key: 'A', title: 'Workout A', sub: p2 ? 'Main lifts 6 to 10 reps' : 'Main lifts 10 to 12 reps', cat: 'gym', ic: 'gym', items: workout('A', ph).map(asItem) },
+    { key: 'B', title: 'Workout B', sub: p2 ? 'Main lifts 6 to 10 reps' : 'Main lifts 10 to 12 reps', cat: 'gym', ic: 'gym', items: workout('B', ph).map(asItem) }
+  ];
+  if (p2) g.push({ key: 'impact', title: 'Impact work', sub: 'After the warm-up on lift days. Move up only if knee and ankles are 3/10 or less the next morning.', cat: 'cond', ic: 'cond',
+    items: [[5, 'Weeks 5 to 6'], [7, 'Weeks 7 to 8'], [9, 'Weeks 9 to 10']].map(([w, l], i) => { const im = impact(w); return { id: 'imp' + i, n: im.n, d: im.d, cue: l, how: im.how }; }) });
+  g.push({ key: 'cond', title: 'Conditioning', sub: p2 ? 'On the bike. Pool is still fine on easy days.' : 'Tuesday and Thursday', cat: 'cond', ic: 'cond',
+    items: p2 ? [[5, 'Weeks 5 to 6'], [7, 'Weeks 7 to 8'], [9, 'Weeks 9 to 10']].map(([w, l], i) => { const c = conditioning(2, w); return { id: 'cnd' + i, n: c.n, d: c.d, cue: l }; })
+              : [{ id: 'cnd0', ...conditioning(1, 1) }] });
+  g.push({ key: 'class', title: 'Muay Thai days', sub: 'Phase 3', cat: 'cond', ic: 'glove', items: [{ id: 'g_wrap', n: 'Wrap hands, use the thumb loop' }] });
+  return g;
+}
+function viewLibrary() {
+  const t = todayKey(), cur = Math.min(2, phaseOf(t)), ph = state.libPhase || cur, si = sessionInfo(t);
+  const todayKeyG = si.type === 'lift' ? si.letter : si.type === 'cond' ? 'cond' : si.type === 'class' ? 'class' : null;
+  const tomorrow = addDays(t, 1);
+  const row = (it, i, cat) => {
+    const e = it.ex, name = e ? e.n : it.n, dose = e ? `${e.sets} × ${e.reps}` : (it.d || ''), cue = e ? e.cue : it.cue;
+    let last = '';
+    if (e && e.w) { const L = lastWeight(e.id, tomorrow); last = `<span class="last">${L ? `Last: ${fmtW(L.w)}` : 'No log yet'}${L && L.top ? `<span class="up">${icon('up')}Up a step</span>` : ''}</span>`; }
+    return `<li class="item"><div class="rowwrap"><div class="row lrow"><span class="lnum">${i + 1}</span>
+      <span class="txt"><span class="nm">${name}${it.isNew ? '<span class="tag">New</span>' : ''}${it.optional ? '<span class="tag">Optional</span>' : ''}</span>${dose ? `<span class="dose">${dose}</span>` : ''}${cue ? `<span class="cue">${cue}</span>` : ''}${last}</span>
+      </div>${howBtn(it)}</div></li>`;
+  };
+  const cards = libGroups(ph).map(g => `<section class="card c-${g.cat}" id="lib-${g.key}">
+    <h2 class="card-h"><span class="badge">${icon(g.ic)}</span>${g.title}${g.key === todayKeyG && ph === cur ? '<span class="count">Today</span>' : ''}</h2>
+    <p class="note">${g.sub}</p><ul class="list">${g.items.map((it, i) => row(it, i, g.cat)).join('')}</ul></section>`);
+  const chips = [1, 2].map(n => `<button class="chip${ph === n ? ' on' : ''}" data-act="libphase" data-v="${n}" aria-pressed="${ph === n}">${ph === n ? icon('check') : ''}Phase ${n}${n === cur ? ' (now)' : ''}</button>`).join('');
+  const half = Math.ceil(cards.length / 2);
+  return swapHTML() + `<header class="top"><div class="top-text"><h1>All exercises</h1><p class="meta">Tap How on any move for form steps and video demos.</p></div></header>
+    <div class="seg c-gym">${chips}</div>
+    <div class="seg" style="margin-bottom:16px"><span class="meta" style="align-self:center">Jump to:</span>${[['home', 'Home'], ['A', 'A'], ['B', 'B'], ...(ph >= 2 ? [['impact', 'Impact']] : []), ['cond', 'Cardio']].map(([k, l]) => `<button class="chip" data-act="jump" data-v="lib-${k}">${l}</button>`).join('')}</div>
+    ${landscape.matches ? `<div class="cols two"><div>${cards.slice(0, half).join('')}</div><div>${cards.slice(half).join('')}</div></div>` : cards.join('')}`;
 }
 
 /* Today */
@@ -589,8 +646,9 @@ function viewToday() {
   state.ringFrom[k] = pct;
   const C = 2 * Math.PI * 26;
   const w = weekOf(k), ph = phaseOf(k);
+  if (isToday) { try { localStorage.setItem('dailyTrainer.today', JSON.stringify({ date: k, type: s.type, label: s.label, phase: ph, week: w })); } catch (e) {} }
   const metaTxt = k < data.settings.startDate ? `Plan starts ${fmtShort(data.settings.startDate)}` : `Week ${w} · Phase ${ph}${ph === 3 ? ': Muay Thai' : ''}`;
-  let h = `<header class="top c-${s.cat}">
+  let h = swapHTML() + `<header class="top c-${s.cat}">
     <div class="top-text">
       <p class="date">${fmtLong(k)}</p>
       <h1><span class="pill">${icon(s.ic)}${s.label}</span></h1>
@@ -707,6 +765,7 @@ function nutCard(r) {
         ? `<button class="minor" data-act="sleep" data-d="-0.5" aria-label="Half hour less">&minus;</button><button class="minor" data-act="sleep" data-d="0.5" aria-label="Half hour more">+</button>`
         : `<button class="main" data-act="sleep" data-d="0">Log sleep</button>`}</div>
     </div>
+    <a class="ghost block" href="nutrition.html" style="text-decoration:none;margin-top:6px">${icon('nut')}What to eat today</a>
   </section>`;
 }
 function sliderHTML(key, label, v) {
@@ -893,11 +952,17 @@ function openSheet(html, cls = 'c-gym', btn = 'main') {
   sheet.querySelector('.sheet-panel').focus();
 }
 function openHow(id) {
-  const day = buildDay(state.view);
-  const it = [...day.home, ...day.gym.items].find(i => (i.ex ? i.ex.id : i.id) === id);
+  const match = i => (i.ex ? i.ex.id : i.id) === id;
+  let it, cls;
+  if (state.lib) {
+    for (const g of libGroups(state.libPhase || Math.min(2, phaseOf(todayKey())))) { it = g.items.find(match); if (it) { cls = 'c-' + g.cat; break; } }
+  } else {
+    const day = buildDay(state.view);
+    it = [...day.home, ...day.gym.items].find(match);
+    if (it) cls = day.home.includes(it) ? 'c-home' : 'c-' + day.gym.cat;
+  }
   const h = it && howFor(it); if (!h) return;
   const name = it.ex ? it.ex.n : it.n, dose = it.ex ? `${it.ex.sets} × ${it.ex.reps}` : (it.d || '');
-  const cls = day.home.includes(it) ? 'c-home' : 'c-' + day.gym.cat;
   const url = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(h.q);
   openSheet(`<h2 id="sheet-title">${name}</h2>${dose ? `<p class="meta">${dose}</p>` : ''}
     <ol class="how">${h.steps.map(t => `<li>${t}</li>`).join('')}</ol>
@@ -981,12 +1046,15 @@ document.addEventListener('click', e => {
     case 'unmove': data.moved = data.moved.filter(x => x !== todayKey()); mutate(() => {}); break;
     case 'info': openRules(); break;
     case 'how': openHow(id); break;
+    case 'lib': state.lib = b.dataset.v === 'true'; state.view = todayKey(); render(true); window.scrollTo(0, 0); break;
+    case 'jump': { const el = document.getElementById(b.dataset.v); if (el) el.scrollIntoView({ behavior: reduce.matches ? 'auto' : 'smooth', block: 'start' }); break; }
+    case 'libphase': state.libPhase = Number(b.dataset.v); render(true); break;
     case 'close': closeSheet(); break;
     case 'tab':
       state.tab = b.dataset.tab;
-      if (state.tab === 'today') state.view = todayKey();
+      if (state.tab === 'today') { state.view = todayKey(); state.lib = false; }
       render(true); window.scrollTo(0, 0); break;
-    case 'openday': state.view = b.dataset.date; state.tab = 'today'; render(true); window.scrollTo(0, 0); break;
+    case 'openday': state.view = b.dataset.date; state.tab = 'today'; state.lib = false; render(true); window.scrollTo(0, 0); break;
     case 'backtoday': state.view = todayKey(); render(true); window.scrollTo(0, 0); break;
     case 'ready': if (data.readiness[id]) delete data.readiness[id]; else data.readiness[id] = todayKey(); save(); render(); break;
     case 'phase': setPhase(b.dataset.v); break;
