@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Fuel">
+<meta name="theme-color" id="themecolor" content="#ffe2cc">
+<script>try{var st=(JSON.parse(localStorage.getItem('dailyTrainer.v1'))||{}).settings;document.documentElement.dataset.theme=(st&&st.theme)||'light';}catch(e){}</script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23855500'/%3E%3Cpath d='M50 130c0-50 30-80 80-85-5 50-35 80-80 85zM50 130l40-40' fill='none' stroke='%23ffffff' stroke-width='14' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>Fuel Plan</title>
+<style>
+:root{
+  --bg:#fff8f1;--sky:#ffe2cc;--card:#ffffff;--text:#2b1820;--muted:#6e4d57;--line:#e6cfc6;--soft:#fbeee6;
+  --home:#b4234a;--home-t:#fde9ee;--gym:#5a2fa0;--gym-t:#efe9fb;--cond:#b3400b;--cond-t:#fdebe0;
+  --nut:#855500;--nut-t:#fcf1d9;--chk:#97186a;--chk-t:#fbe7f3;--rest:#4b4f78;--rest-t:#edeef6;
+  --on-accent:#ffffff;color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --bg:#160d13;--sky:#3b1c2c;--card:#241821;--text:#fbeff1;--muted:#cdb5be;--line:#55404b;--soft:#34232d;
+  --home:#fda4b8;--home-t:#3a1a24;--gym:#c9b6ff;--gym-t:#261d40;--cond:#fdba8c;--cond-t:#3a2216;
+  --nut:#fcd36b;--nut-t:#33280f;--chk:#f7a8d8;--chk-t:#3a1730;--rest:#c3c7e8;--rest-t:#252840;
+  --on-accent:#1a1016;color-scheme:dark;
+}
+@media (prefers-color-scheme: dark){
+  :root[data-theme="auto"]{
+    --bg:#160d13;--sky:#3b1c2c;--card:#241821;--text:#fbeff1;--muted:#cdb5be;--line:#55404b;--soft:#34232d;
+    --home:#fda4b8;--home-t:#3a1a24;--gym:#c9b6ff;--gym-t:#261d40;--cond:#fdba8c;--cond-t:#3a2216;
+    --nut:#fcd36b;--nut-t:#33280f;--chk:#f7a8d8;--chk-t:#3a1730;--rest:#c3c7e8;--rest-t:#252840;
+    --on-accent:#1a1016;color-scheme:dark;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;font-size:18px;line-height:1.45;color:var(--text);
+  background:var(--bg) linear-gradient(180deg,var(--sky) 0,var(--bg) 440px) no-repeat;-webkit-tap-highlight-color:transparent;min-height:100vh;
+  padding:max(14px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+button,input{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer;touch-action:manipulation}
+a{color:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--text);outline-offset:2px}
+#app{max-width:1000px;margin:0 auto}
+.ico{width:24px;height:24px;flex:none}
+.c-home{--c:var(--home);--ct:var(--home-t)}.c-gym{--c:var(--gym);--ct:var(--gym-t)}.c-cond{--c:var(--cond);--ct:var(--cond-t)}
+.c-nut{--c:var(--nut);--ct:var(--nut-t)}.c-chk{--c:var(--chk);--ct:var(--chk-t)}.c-rest{--c:var(--rest);--ct:var(--rest-t)}
+
+.top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.back{min-height:48px;padding:0 16px 0 10px;border-radius:999px;background:var(--card);border:1.5px solid var(--line);font-weight:800;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.top h1{font-size:28px;flex:1}
+.meta{color:var(--muted)}
+.tabs{position:sticky;top:0;z-index:5;display:flex;gap:6px;overflow-x:auto;padding:8px 0 12px;margin-bottom:6px;background:linear-gradient(var(--bg) 80%,transparent)}
+.tabs button{flex:1;min-width:max-content;min-height:48px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--card);font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.tabs button[aria-current="page"]{background:var(--text);color:var(--bg);border-color:var(--text)}
+.tabs .ico{width:20px;height:20px}
+
+.card{background:var(--card);border-radius:20px;padding:18px;margin-bottom:16px;border-top:6px solid var(--c,var(--line));box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.card-h{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:800;margin-bottom:10px}
+.badge{width:40px;height:40px;border-radius:12px;background:var(--c);color:var(--on-accent);display:grid;place-items:center;flex:none}
+.count{margin-left:auto;font-size:18px;font-weight:800;background:var(--soft);padding:4px 12px;border-radius:999px;white-space:nowrap}
+.note{color:var(--muted);margin-bottom:10px}
+.pill{display:inline-flex;align-items:center;gap:8px;background:var(--c);color:var(--on-accent);padding:6px 14px 6px 10px;border-radius:999px;font-size:20px;font-weight:800}
+.pill .ico{width:22px;height:22px}
+
+.meals{list-style:none;display:flex;flex-direction:column;gap:8px}
+.meal{display:flex;gap:14px;align-items:flex-start;background:var(--ct);border-radius:14px;padding:12px 14px}
+.when{font-size:16px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+.what{font-weight:800}
+.pro{margin-left:auto;text-align:right;font-weight:800;white-space:nowrap}
+.pro small{display:block;font-size:16px;color:var(--muted);font-weight:700}
+.total{display:flex;justify-content:space-between;font-weight:800;padding:12px 4px 0;border-top:1px solid var(--line);margin-top:10px}
+
+.seg{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chip{min-height:44px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);font-weight:800;font-size:17px;background:var(--card);display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:var(--c);border-color:var(--c);color:var(--on-accent)}
+.chip .ico{width:18px;height:18px;stroke-width:3}
+
+.list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.item{border-radius:12px;background:var(--ct)}
+.row{display:flex;align-items:flex-start;gap:14px;width:100%;text-align:left;padding:11px 14px;min-height:56px;border-radius:12px}
+.box{width:30px;height:30px;border-radius:9px;border:2.5px solid var(--c);display:grid;place-items:center;flex:none;background:var(--card)}
+.box .ico{width:20px;height:20px;stroke-width:3;opacity:0;color:var(--on-accent)}
+.done .box{background:var(--c)}.done .box .ico{opacity:1}
+.txt{display:flex;flex-direction:column;min-width:0}
+.nm{font-weight:800}.qty{color:var(--muted);font-weight:600}
+.item.done{background:var(--soft)}
+.item.done .nm{color:var(--muted);text-decoration:line-through;text-decoration-thickness:2px}
+.aisle{font-size:16px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:14px 2px 6px}
+.aisle:first-of-type{margin-top:2px}
+.btnrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.main{min-height:50px;padding:10px 20px;border-radius:14px;background:var(--c);color:var(--on-accent);font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.ghost{min-height:50px;padding:10px 18px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);font-weight:800;display:inline-flex;align-items:center;gap:8px}
+
+.recipe h3{font-size:22px;margin-bottom:2px}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
+.fact{background:var(--ct);border-radius:999px;padding:4px 12px;font-weight:800;font-size:17px}
+.recipe h4{font-size:17px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:12px 0 6px}
+.recipe ul,.recipe ol,.guide ul{padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+.guide p+p,.guide p+ul,.guide ul+p{margin-top:10px}
+.handgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.hand{background:var(--ct);border-radius:12px;padding:10px 12px}
+.hand b{display:block}
+.calc{background:var(--ct);border-radius:14px;padding:14px;margin-top:10px}
+.calc .big{font-size:24px;font-weight:800}
+.cols{display:block}
+@media (orientation: landscape) and (min-width:960px){.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}}
+#toast{position:fixed;left:50%;bottom:calc(30px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--text);color:var(--bg);padding:12px 20px;border-radius:14px;font-weight:800;z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.show{opacity:1}
+@media (prefers-reduced-motion: no-preference){button:active{transform:scale(.97)}}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+(() => {
+'use strict';
+const TRACKER_KEY = 'dailyTrainer.v1', TODAY_KEY = 'dailyTrainer.today', KEY = 'knwpFood.v1';
+const TRACKER_FILE = 'training.html'; // change this if you renamed the tracker (for example to index.html)
+const DAY = 86400000;
+const app = document.getElementById('app');
+
+/* ---------- Dates ---------- */
+const pad = n => String(n).padStart(2, '0');
+const keyOf = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const todayKey = () => keyOf(new Date());
+const dayNum = k => { const [y, m, d] = k.split('-').map(Number); return Math.round(Date.UTC(y, m - 1, d) / DAY); };
+const keyFromNum = n => { const d = new Date(n * DAY); return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`; };
+const weekday = k => new Date(dayNum(k) * DAY).getUTCDay();
+const sundayOf = k => keyFromNum(dayNum(k) - weekday(k));
+const fmtMD = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); };
+const fmtLong = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' }); };
+
+/* ---------- Data ---------- */
+function readJSON(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
+const tracker = readJSON(TRACKER_KEY) || {};
+const tSettings = tracker.settings || {};
+let store = readJSON(KEY) || {};
+store.checks = store.checks || {}; store.rot = store.rot || {};
+function save() {
+  const keep = Object.keys(store.checks).sort().slice(-8), c = {};
+  keep.forEach(k => { c[k] = store.checks[k]; });
+  store.checks = c;
+  try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {}
+}
+function latestWeight() {
+  const days = tracker.days || {}, keys = Object.keys(days).sort();
+  for (let i = keys.length - 1; i >= 0; i--) if (days[keys[i]].bw != null) return { w: days[keys[i]].bw, k: keys[i] };
+  return null;
+}
+
+/* ---------- Icons ---------- */
+const IC = {
+  back: '<path d="M15 5l-7 7 7 7"/>', check: '<path d="M5 12.5 10 17.5 19 7"/>',
+  today: '<rect x="3.5" y="4.5" width="17" height="16" rx="3"/><path d="M3.5 9.5h17M8 3v3M16 3v3"/>',
+  cart: '<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2.5 3.5h3l2.5 12h11l2-8H7"/>',
+  prep: '<path d="M4 11h16v3a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6zM2 11h20M9 7c0-2 2-2 2-4M14 7c0-2 2-2 2-4"/>',
+  book: '<path d="M4 4.5h6a2 2 0 0 1 2 2V20a2 2 0 0 0-2-2H4zM20 4.5h-6a2 2 0 0 0-2 2V20a2 2 0 0 1 2-2h6z"/>',
+  guide: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>',
+  gym: '<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/>',
+  rest: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+  cond: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  glove: '<path d="M7 4h7a4 4 0 0 1 4 4v5a5 5 0 0 1-5 5H9a3 3 0 0 1-3-3v-2H5a2 2 0 0 1 0-4h1V5a1 1 0 0 1 1-1zM8 18v3h7v-3"/>',
+  copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
+  undo: '<path d="M9 14 4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3"/>',
+  nut: '<path d="M5 21c0-9 6-15 15-16-1 9-7 15-15 16zM5 21l8-8"/>'
+};
+const icon = n => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
+
+/* ---------- Menus: 3 rotating weeks so it doesn't get boring ---------- */
+const AISLES = ['Meat', 'Dairy and eggs', 'Produce', 'Frozen', 'Grains and cans', 'Check at home first'];
+const STAPLES = [
+  ['eggs', 'Eggs', '1 dozen', 'Dairy and eggs'],
+  ['whites', 'Liquid egg whites', '32 oz carton', 'Dairy and eggs'],
+  ['yog', 'Plain nonfat Greek yogurt', '32 oz tub', 'Dairy and eggs'],
+  ['yogcup', 'Greek yogurt cups', '6', 'Dairy and eggs'],
+  ['cott', 'Cottage cheese', '24 oz tub', 'Dairy and eggs'],
+  ['milk', 'Milk', 'half gallon', 'Dairy and eggs'],
+  ['cheese', 'Shredded cheese', '8 oz bag', 'Dairy and eggs'],
+  ['banana', 'Bananas', '6', 'Produce'],
+  ['fruit', 'Apples or oranges', '4', 'Produce'],
+  ['spinach', 'Baby spinach', '5 oz bag', 'Produce'],
+  ['bell', 'Bell pepper', '1', 'Produce'],
+  ['garlic', 'Garlic', '1 head', 'Produce'],
+  ['berries', 'Frozen berries', '1 bag', 'Frozen'],
+  ['tuna', 'Tuna pouches', '4', 'Grains and cans'],
+  ['rice', 'Rice', '2 lb bag, if you are out', 'Grains and cans'],
+  ['oats', 'Old-fashioned oats', '1 canister, if you are out', 'Grains and cans'],
+  ['whey', 'Whey protein', '1 tub, if you are out', 'Grains and cans'],
+  ['basics', 'Olive oil, salt, pepper, garlic powder, cinnamon', '', 'Check at home first']
+];
+const MENUS = {
+  1: {
+    name: 'Sheet-pan chicken + turkey chili', a: 'Sheet-pan chicken bowl', b: 'Turkey chili bowl',
+    groceries: [
+      ['thigh', 'Boneless skinless chicken thighs', '3.5 lb', 'Meat'],
+      ['turkey', '93% lean ground turkey', '2 lb', 'Meat'],
+      ['onion', 'Onion', '1', 'Produce'],
+      ['broc', 'Frozen broccoli', '2 bags', 'Frozen'],
+      ['tom', 'Diced tomatoes', '28 oz can', 'Grains and cans'],
+      ['sauce', 'Tomato sauce', '15 oz can', 'Grains and cans'],
+      ['beans', 'Kidney beans and black beans', '1 can each', 'Grains and cans'],
+      ['tort', 'Whole wheat tortillas', '1 pack', 'Grains and cans'],
+      ['spice', 'Paprika, chili powder, cumin', '', 'Check at home first']
+    ],
+    sunMain: 'Season the thighs (oil, paprika, garlic powder, salt, pepper). Sheet pan, 25 to 30 min, until 175°F inside.',
+    wedMain: 'Turkey chili in one pot (Recipes tab). Serve over rice or with tortillas.',
+    recipes: ['r1a', 'r1b']
+  },
+  2: {
+    name: 'Lemon pepper chicken + taco bowls', a: 'Lemon pepper chicken bowl', b: 'Taco bowl',
+    groceries: [
+      ['breast', 'Boneless skinless chicken breasts', '3.5 lb', 'Meat'],
+      ['beef', '90% lean ground beef', '2 lb', 'Meat'],
+      ['lemon', 'Lemon', '1', 'Produce'],
+      ['onion', 'Onion', '1', 'Produce'],
+      ['lett', 'Shredded lettuce or coleslaw mix', '1 bag', 'Produce'],
+      ['gb', 'Frozen green beans', '2 bags', 'Frozen'],
+      ['corn', 'Frozen corn', '1 bag', 'Frozen'],
+      ['bb', 'Black beans', '2 cans', 'Grains and cans'],
+      ['salsa', 'Salsa', '1 jar', 'Grains and cans'],
+      ['spice', 'Lemon pepper, chili powder, cumin, oregano', '', 'Check at home first']
+    ],
+    sunMain: 'Lemon pepper chicken on a sheet pan, 20 to 25 min to 165°F. Rest 5 min, then slice.',
+    wedMain: 'Taco meat with beans and corn (Recipes tab). Add lettuce and salsa when you eat it so it stays crisp.',
+    recipes: ['r2a', 'r2b']
+  },
+  3: {
+    name: 'Teriyaki chicken + turkey meatballs', a: 'Teriyaki chicken bowl', b: 'Meatballs and pasta',
+    groceries: [
+      ['thigh', 'Boneless skinless chicken thighs', '3.5 lb', 'Meat'],
+      ['turkey', '93% lean ground turkey', '2 lb', 'Meat'],
+      ['stir', 'Frozen stir-fry vegetables', '2 bags', 'Frozen'],
+      ['broc', 'Frozen broccoli', '1 bag', 'Frozen'],
+      ['mar', 'Marinara sauce', '24 oz jar', 'Grains and cans'],
+      ['pasta', 'Pasta (protein pasta if you like it)', '1 lb box', 'Grains and cans'],
+      ['spice', 'Soy sauce, honey, ground ginger, cornstarch, Italian seasoning', '', 'Check at home first']
+    ],
+    sunMain: 'Bake the thighs 25 min at 425°F, then toss them in teriyaki sauce (Recipes tab).',
+    wedMain: 'Turkey meatballs in the oven, pasta on the stove, marinara warmed (Recipes tab).',
+    recipes: ['r3a', 'r3b']
+  }
+};
+const RECIPES = {
+  r1a: { n: 'Sheet-pan chicken thighs', y: '7 portions', p: 43, ing: ['3.5 lb boneless skinless chicken thighs', '2 tbsp olive oil', '2 tsp paprika', '2 tsp garlic powder', '1½ tsp salt, 1 tsp pepper'], steps: ['Oven to 425°F. Line a sheet pan.', 'Toss the thighs with oil and spices.', 'Single layer. Use 2 pans if they are crowded or they steam instead of brown.', 'Bake 25 to 30 min until 175°F inside. Rest 5 min, slice.', 'Portion with rice and roasted broccoli.'] },
+  r1b: { n: 'Turkey chili', y: '5 portions', p: 44, ing: ['2 lb 93% lean ground turkey', '1 onion, diced', '3 cloves garlic, minced', '2 tbsp chili powder, 2 tsp cumin, 1 tsp paprika', '28 oz can diced tomatoes', '15 oz can tomato sauce', '1 can kidney beans and 1 can black beans, drained', 'Salt to taste'], steps: ['Brown the turkey and onion in a big pot, 8 to 10 min.', 'Add garlic and spices, stir 1 min.', 'Add tomatoes, sauce and beans.', 'Simmer 25 min, salt to taste.', 'Serve over rice or with tortillas and a little cheese.'] },
+  r2a: { n: 'Lemon pepper chicken', y: '7 portions', p: 48, ing: ['3.5 lb boneless skinless chicken breasts', '2 tbsp olive oil', '1 tbsp lemon pepper', '1 tsp garlic powder', 'Salt', '1 lemon'], steps: ['Oven to 425°F.', 'Thick breasts? Slice them in half sideways so they cook evenly and stay juicy.', 'Coat with oil and seasoning, sheet pan.', 'Bake 20 to 25 min until 165°F inside.', 'Rest 5 min, squeeze lemon over, slice. Portion with rice and green beans.'] },
+  r2b: { n: 'Taco bowls', y: '5 portions', p: 46, ing: ['2 lb 90% lean ground beef', '1 onion, diced', '2 tbsp chili powder, 2 tsp cumin, 1 tsp oregano, 1 tsp garlic powder, 1 tsp salt', '½ cup water', '2 cans black beans, drained', '1 bag frozen corn', 'Rice, lettuce, salsa'], steps: ['Brown the beef and onion. Drain fat if there is a lot.', 'Add spices and water, simmer 5 min.', 'Warm the beans and corn.', 'Bowls: rice, beef, beans and corn.', 'Add lettuce and salsa when you eat, not when you prep.'] },
+  r3a: { n: 'Teriyaki chicken', y: '7 portions', p: 43, ing: ['3.5 lb boneless skinless chicken thighs', '½ cup soy sauce', '⅓ cup honey', '2 cloves garlic, minced', '1 tsp ground ginger', '1 tbsp cornstarch mixed with 2 tbsp water'], steps: ['Bake the thighs at 425°F for 25 min, until 175°F inside.', 'Meanwhile simmer soy, honey, garlic and ginger for 2 to 3 min.', 'Stir in the cornstarch mix until the sauce turns glossy.', 'Slice the chicken and toss it in the sauce.', 'Portion with rice and stir-fry vegetables.'] },
+  r3b: { n: 'Turkey meatballs and pasta', y: '5 portions', p: 44, ing: ['2 lb 93% lean ground turkey', '2 eggs', '½ cup oats', '2 tsp Italian seasoning, 1 tsp garlic powder, 1 tsp salt', '24 oz jar marinara', '1 lb pasta'], steps: ['Oven to 400°F.', 'Mix everything but the sauce and pasta. Roll about 24 balls, golf ball size.', 'Sheet pan, 18 to 20 min until 165°F inside.', 'Cook the pasta, warm the marinara, add the meatballs.', 'Portion with broccoli on the side.'] },
+  oats: { n: 'Protein overnight oats', y: '4 jars (Mon to Thu)', p: 50, ing: ['Per jar: ½ cup oats', '¾ cup plain Greek yogurt', '1 scoop whey', '½ cup milk', '½ cup frozen berries, pinch of cinnamon'], steps: ['Mix everything in a jar or container.', 'Lid on, fridge overnight.', 'Eat cold. Add a splash of milk if it is too thick.'] },
+  bites: { n: 'Egg bites', y: '12 bites (Fri to Sun, 4 a day)', p: 40, ing: ['10 eggs', '1½ cups liquid egg whites', '2 handfuls spinach, chopped', '1 bell pepper, diced', '1 cup shredded cheese, salt and pepper'], steps: ['Oven to 350°F. Grease a 12-cup muffin tin (or a 9x13 pan).', 'Whisk the eggs, whites, salt and pepper.', 'Split the veg and cheese between the cups, pour the egg over.', 'Bake 20 to 25 min until set (9x13: 30 to 35 min, cut into 12).', 'Cool, then fridge. Reheat 30 to 45 sec.'] }
+};
+const GRAB = [['Greek yogurt cup', 15], ['Cottage cheese, 1 cup', 25], ['Tuna pouch', 17], ['Shake: 1 scoop whey + milk', 30], ['2 eggs', 12]];
+
+/* ---------- Week, menu, today ---------- */
+function weekIndex(sunKey) {
+  const start = tSettings.startDate || todayKey();
+  return Math.floor((dayNum(sunKey) - dayNum(sundayOf(start))) / 7);
+}
+function menuFor(sunKey) {
+  if (store.rot[sunKey]) return store.rot[sunKey];
+  const i = Math.max(0, weekIndex(sunKey));
+  return (i % 3) + 1;
+}
+function todaySession() {
+  const t = readJSON(TODAY_KEY);
+  if (t && t.date === todayKey()) return t;
+  return null;
+}
+const TRAIN = ['lift', 'cond', 'class'];
+
+/* ---------- State ---------- */
+const state = { tab: 'today', week: 'this', dayOverride: null };
+const curSun = () => sundayOf(todayKey());
+const nextSun = () => keyFromNum(dayNum(curSun()) + 7);
+const selSun = () => (state.week === 'next' ? nextSun() : curSun());
+function checks(sun) { return store.checks[sun] || (store.checks[sun] = { g: {}, p: {} }); }
+
+/* ---------- Views ---------- */
+function render() {
+  const tabs = [['today', 'Today', 'today'], ['groceries', 'Groceries', 'cart'], ['prep', 'Prep', 'prep'], ['recipes', 'Recipes', 'book'], ['guide', 'Guide', 'guide']];
+  app.innerHTML = `<header class="top"><a class="back" href="${TRACKER_FILE}" data-act="back">${icon('back')}Tracker</a><h1>Fuel</h1></header>
+    <nav class="tabs" aria-label="Sections">${tabs.map(([t, l, i]) => `<button data-act="tab" data-tab="${t}" aria-current="${state.tab === t ? 'page' : 'false'}">${icon(i)}${l}</button>`).join('')}</nav>
+    ${({ today: vToday, groceries: vGroceries, prep: vPrep, recipes: vRecipes, guide: vGuide })[state.tab]()}`;
+}
+
+function vToday() {
+  const k = todayKey(), wd = weekday(k), sess = todaySession();
+  const m = MENUS[menuFor(curSun())];
+  let kind = state.dayOverride || (sess ? (TRAIN.includes(sess.type) ? (sess.type === 'class' ? 'class' : 'train') : 'rest') : null);
+  const bowl = (wd >= 1 && wd <= 3) || wd === 0 ? m.a : m.b;
+  const bfast = wd >= 1 && wd <= 4 ? ['Overnight oats jar', 50] : ['4 egg bites + fruit', 40];
+  const head = `<p class="meta">${fmtLong(k)}</p>`;
+  if (!kind) {
+    return head + `<section class="card c-nut"><h2 class="card-h"><span class="badge">${icon('nut')}</span>What kind of day?</h2>
+      <p class="note">Open the tracker first and this picks it up on its own. Or choose:</p>
+      <div class="seg"><button class="chip" data-act="day" data-v="train">Training day</button><button class="chip" data-act="day" data-v="class">Muay Thai class</button><button class="chip" data-act="day" data-v="rest">Rest day</button></div></section>`;
+  }
+  const label = sess && !state.dayOverride ? sess.label : ({ train: 'Training day', class: 'Muay Thai class', rest: 'Rest day' })[kind];
+  const cat = kind === 'rest' ? 'c-rest' : kind === 'class' ? 'c-cond' : 'c-gym';
+  const ic = kind === 'rest' ? 'rest' : kind === 'class' ? 'glove' : 'gym';
+  let meals;
+  if (kind === 'rest') meals = [
+    ['Breakfast', bfast[0], bfast[1]],
+    ['Lunch', `${bowl}, 1 fist of carbs`, 45],
+    ['Afternoon', 'Cottage cheese or a tuna pouch', 20],
+    ['Dinner', `${bowl}, 1 fist of carbs`, 45]
+  ];
+  else if (kind === 'class') meals = [
+    ['Breakfast', bfast[0], bfast[1]],
+    ['Lunch', `${bowl}, 2 fists of carbs`, 45],
+    ['2 to 3 h before class', 'Light: banana + Greek yogurt cup. Nothing heavy after this.', 15],
+    ['After class', 'Shake + water. Salt your next meal.', 30],
+    ['Dinner', `${bowl}, 2 fists of carbs`, 45]
+  ];
+  else meals = [
+    ['Breakfast', bfast[0], bfast[1]],
+    ['1 to 2 h before training', 'Banana + Greek yogurt cup', 15],
+    ['Lunch', `${bowl}, 2 fists of carbs`, 45],
+    ['After training', 'Shake: 1 scoop whey + milk', 30],
+    ['Dinner', `${bowl}, 2 fists of carbs`, 45]
+  ];
+  const total = meals.reduce((a, x) => a + x[2], 0);
+  const chips = g => Math.max(1, Math.round(g / 25));
+  return head + `<p style="margin:6px 0 14px" class="${cat}"><span class="pill">${icon(ic)}${label}</span></p>
+    <div class="cols"><section class="card ${cat}"><h2 class="card-h"><span class="badge">${icon('today')}</span>Today's eating</h2>
+      <ul class="meals">${meals.map(([w, f, g]) => `<li class="meal"><div><div class="when">${w}</div><div class="what">${f}</div></div><div class="pro">≈${g} g<small>${chips(g)} chip${chips(g) > 1 ? 's' : ''}</small></div></li>`).join('')}</ul>
+      <div class="total"><span>Protein</span><span>≈${total} g of 150 to 190</span></div>
+      <p class="note" style="margin-top:10px">Each "chip" is one +25 g tap in the tracker. ${kind !== 'rest' ? 'Train in the morning? Move the pre-training snack before it and eat lunch after.' : 'Lighter on carbs today, same protein.'}</p>
+      ${sess ? '' : `<div class="seg" style="margin-top:6px"><button class="chip" data-act="day" data-v="">Change day type</button></div>`}
+    </section>
+    <section class="card c-nut"><h2 class="card-h"><span class="badge">${icon('nut')}</span>This week's menu</h2>
+      <p><b>${m.name}</b></p>
+      <p class="note" style="margin-top:6px">Sunday to Wednesday: ${m.a}. Thursday to Saturday: ${m.b}. Two meals a week are yours, eat whatever, no guilt.</p>
+      <h4 class="when" style="margin-top:12px">If you are hungry</h4>
+      <ul class="meals" style="margin-top:6px">${GRAB.map(([n, g]) => `<li class="meal"><div class="what">${n}</div><div class="pro">≈${g} g</div></li>`).join('')}</ul>
+    </section></div>`;
+}
+
+function grocItems(menu) {
+  return STAPLES.map(([id, n, q, a]) => ({ id: 's_' + id, n, q, a })).concat(MENUS[menu].groceries.map(([id, n, q, a]) => ({ id: 'm' + menu + '_' + id, n, q, a })));
+}
+function weekPicker() {
+  const cur = curSun(), nx = nextSun();
+  return `<div class="seg c-nut">
+    <button class="chip${state.week === 'this' ? ' on' : ''}" data-act="week" data-v="this" aria-pressed="${state.week === 'this'}">This week · Menu ${menuFor(cur)}</button>
+    <button class="chip${state.week === 'next' ? ' on' : ''}" data-act="week" data-v="next" aria-pressed="${state.week === 'next'}">Next week · Menu ${menuFor(nx)}</button></div>
+    <div class="seg c-nut"><span class="meta" style="align-self:center">Swap menu:</span>${[1, 2, 3].map(n => `<button class="chip${menuFor(selSun()) === n ? ' on' : ''}" data-act="menu" data-v="${n}" aria-pressed="${menuFor(selSun()) === n}">${n}</button>`).join('')}</div>`;
+}
+function checkRow(id, n, q, done, act) {
+  return `<li class="item${done ? ' done' : ''}"><button class="row" data-act="${act}" data-id="${id}" aria-pressed="${done}"><span class="box">${icon('check')}</span><span class="txt"><span class="nm">${n}</span>${q ? `<span class="qty">${q}</span>` : ''}</span></button></li>`;
+}
+function vGroceries() {
+  const sun = selSun(), menu = menuFor(sun), c = checks(sun).g, items = grocItems(menu);
+  const left = items.filter(i => !c[i.id]).length;
+  let body = '';
+  AISLES.forEach(a => {
+    const its = items.filter(i => i.a === a).sort((x, y) => (c[x.id] ? 1 : 0) - (c[y.id] ? 1 : 0));
+    if (!its.length) return;
+    body += `<h3 class="aisle">${a}</h3><ul class="list">${its.map(i => checkRow(i.id, i.n, i.q, !!c[i.id], 'g')).join('')}</ul>`;
+  });
+  return weekPicker() + `<section class="card c-nut"><h2 class="card-h"><span class="badge">${icon('cart')}</span>Groceries<span class="count">${left} left</span></h2>
+    <p class="note">${MENUS[menu].name}. Week of ${fmtMD(sun)}. Check the "at home first" stuff before you go.</p>
+    ${body}
+    <div class="btnrow"><button class="main" data-act="copy">${icon('copy')}Copy what's left</button><button class="ghost" data-act="cleargroc">${icon('undo')}Clear checks</button></div>
+  </section>`;
+}
+function prepSteps(menu) {
+  const m = MENUS[menu];
+  return {
+    sun: [
+      ['s1', 'Oven to 425°F. Start 3 cups of dry rice.'],
+      ['s2', m.sunMain],
+      ['s3', 'Frozen veg on a second pan with oil and salt, roast about 20 min.'],
+      ['s4', 'Make 4 overnight oats jars while things cook.'],
+      ['s5', 'Portion 7 containers: protein, rice, veg. Into the fridge.']
+    ],
+    wed: [
+      ['w1', m.wedMain],
+      ['w2', menu === 3 ? 'Pasta is your carb this time. Skip the rice.' : 'Start 2 cups of dry rice.'],
+      ['w3', 'Egg bites: 12 in a muffin tin.'],
+      ['w4', 'Portion 5 containers. Fridge.']
+    ]
+  };
+}
+function vPrep() {
+  const sun = selSun(), menu = menuFor(sun), c = checks(sun).p, s = prepSteps(menu);
+  const block = (title, sub, steps, cat) => {
+    const dn = steps.filter(([id]) => c[id]).length;
+    return `<section class="card ${cat}"><h2 class="card-h"><span class="badge">${icon('prep')}</span>${title}<span class="count">${dn}/${steps.length}</span></h2>
+      <p class="note">${sub}</p><ul class="list">${steps.map(([id, t]) => checkRow(id, t, '', !!c[id], 'p')).join('')}</ul></section>`;
+  };
+  return weekPicker() + `<p class="note">Starting mid-week? Do the Sunday prep today, then Wednesday's whenever the first batch runs out. Cooked food is good 3 to 4 days in the fridge, that's why it's two preps.</p>
+    <div class="cols">${block('Sunday prep', 'About 75 to 90 min. Covers Sunday dinner through Wednesday.', s.sun, 'c-home')}
+    ${block('Wednesday prep', 'About 45 min. Covers Thursday through Saturday.', s.wed, 'c-gym')}</div>`;
+}
+function recipeCard(id, cat) {
+  const r = RECIPES[id];
+  return `<section class="card recipe ${cat}"><h3>${r.n}</h3>
+    <div class="facts"><span class="fact">${r.y}</span><span class="fact">≈${r.p} g protein each</span><span class="fact">${Math.round(r.p / 25)} chips</span></div>
+    <h4>You need</h4><ul>${r.ing.map(i => `<li>${i}</li>`).join('')}</ul>
+    <h4>Steps</h4><ol>${r.steps.map(t => `<li>${t}</li>`).join('')}</ol></section>`;
+}
+function vRecipes() {
+  const menu = menuFor(selSun()), m = MENUS[menu];
+  return weekPicker() + `<div class="cols"><div>${recipeCard(m.recipes[0], 'c-home')}${recipeCard('oats', 'c-nut')}</div><div>${recipeCard(m.recipes[1], 'c-gym')}${recipeCard('bites', 'c-chk')}</div></div>
+    <p class="note">Protein numbers are estimates. Labels vary by brand.</p>`;
+}
+function vGuide() {
+  const lw = latestWeight();
+  const calc = lw
+    ? (() => { const w = lw.w, lo = Math.round(w * 14 / 50) * 50, hi = Math.round(w * 16 / 50) * 50; return `<div class="calc"><p class="meta">From your weigh-in on ${fmtMD(lw.k)} (${w} lb)</p>
+        <p class="big">Maintain: about ${lo.toLocaleString()} to ${hi.toLocaleString()} cal</p>
+        <p class="big">Lean out: about ${(lo - 400).toLocaleString()} to ${(hi - 400).toLocaleString()} cal</p>
+        <p class="meta" style="margin-top:6px">Rough starting point (body weight × 14 to 16, minus about 400 to lean out). Your waist trend is the real judge.</p></div>`; })()
+    : `<div class="calc"><p>Log a weekly weigh-in in the tracker and a rough calorie range shows up here.</p></div>`;
+  return `<div class="cols guide"><div>
+    <section class="card c-nut"><h2 class="card-h"><span class="badge">${icon('nut')}</span>Build a plate</h2>
+      <p>No counting needed. Use your hand.</p>
+      <div class="handgrid"><div class="hand"><b>Protein</b>2 palms</div><div class="hand"><b>Veg</b>2 fists</div><div class="hand"><b>Carbs</b>2 fists on training days, 1 on rest days</div><div class="hand"><b>Fat</b>1 thumb (oil, cheese, sauce)</div></div></section>
+    <section class="card c-gym"><h2 class="card-h"><span class="badge">${icon('gym')}</span>By phase</h2><ul>
+      <li><b>Phase 1:</b> lock in protein and water. Don't slash food while you rehab; under-eating slows recovery.</li>
+      <li><b>Phase 2:</b> the bike intervals and impact work need fuel. Eat carbs 1 to 2 hours before hard days.</li>
+      <li><b>Phase 3:</b> light meal 2 to 3 hours before class, nothing heavy after that. After class: shake, water, salt your food. Extra fist of carbs on class days.</li></ul></section>
+    <section class="card c-chk"><h2 class="card-h"><span class="badge">${icon('guide')}</span>Steer by your waist</h2>
+      <p>Check the waist line on the Progress tab every 2 weeks.</p><ul>
+      <li>Going down slowly: keep doing what you're doing.</li>
+      <li>Flat for 3 weeks and you want it lower: drop the dinner carbs to 1 fist on rest days.</li>
+      <li>Workouts feel flat, or the scale drops more than about 1% of your weight a week: add a fist of carbs back.</li></ul>${calc}</section>
+  </div><div>
+    <section class="card c-cond"><h2 class="card-h"><span class="badge">${icon('cond')}</span>Water</h2><ul>
+      <li>Hit the glass goal in the tracker. Pale yellow pee means you're good.</li>
+      <li>Add a glass or two on sauna days and class days. Heavy sweat days, salt your food.</li></ul></section>
+    <section class="card c-home"><h2 class="card-h"><span class="badge">${icon('undo')}</span>Swaps</h2><ul>
+      <li>Turkey or beef: swap either way.</li>
+      <li>Chicken breast and thighs: swap either way. Thighs are cheaper and harder to dry out.</li>
+      <li>Rice, potatoes, tortillas, pasta: all count as a carb fist.</li>
+      <li>Sick of oats: eggs and toast. Out of whey: an extra cup of Greek yogurt.</li></ul></section>
+    <section class="card c-rest"><h2 class="card-h"><span class="badge">${icon('rest')}</span>Good to know</h2><ul>
+      <li>Cooked food: 3 to 4 days in the fridge. Freeze anything you won't get to.</li>
+      <li>Done temps: chicken and turkey 165°F, ground beef 160°F.</li>
+      <li>Cheaper: family packs, store brands, frozen veg and frozen berries.</li>
+      <li>Optional: creatine monohydrate, 3 to 5 g a day, is the most studied strength supplement. Ask your doctor first if you have kidney issues.</li></ul></section>
+  </div></div>`;
+}
+
+/* ---------- Actions ---------- */
+function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2200); }
+async function copyList() {
+  const sun = selSun(), c = checks(sun).g;
+  const text = grocItems(menuFor(sun)).filter(i => !c[i.id]).map(i => i.q ? `${i.n}, ${i.q}` : i.n).join('\n');
+  try { await navigator.clipboard.writeText(text); toast('Copied. Paste it into Notes or Reminders.'); }
+  catch (e) {
+    const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); toast('Copied.'); } catch (err) { toast('Copy did not work here.'); }
+    ta.remove();
+  }
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const a = b.dataset.act;
+  if (a === 'back') {
+    if (document.referrer && document.referrer.indexOf(location.origin) === 0 && history.length > 1) { e.preventDefault(); history.back(); }
+    return;
+  }
+  if (a === 'tab') { state.tab = b.dataset.tab; render(); window.scrollTo(0, 0); return; }
+  if (a === 'week') state.week = b.dataset.v;
+  else if (a === 'menu') { store.rot[selSun()] = Number(b.dataset.v); save(); }
+  else if (a === 'day') state.dayOverride = b.dataset.v || null;
+  else if (a === 'g' || a === 'p') { const c = checks(selSun())[a]; c[b.dataset.id] = !c[b.dataset.id]; save(); }
+  else if (a === 'cleargroc') { checks(selSun()).g = {}; save(); }
+  else if (a === 'copy') { copyList(); return; }
+  render();
+});
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') render(); });
+try {
+  const t = tSettings.theme || 'light';
+  const dark = t === 'dark' || (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+  document.getElementById('themecolor').content = dark ? '#3b1c2c' : '#ffe2cc';
+} catch (e) {}
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  navigator.serviceWorker.register('sw.js').then(() => navigator.serviceWorker.ready)
+    .then(reg => { if (reg.active) reg.active.postMessage({ cache: location.href.split('#')[0] }); }).catch(() => {});
+}
+render();
+})();
+</script>
+</body>
+</html>
