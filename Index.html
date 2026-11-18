@@ -369,20 +369,20 @@ function workout(letter, phase) {
   if (letter === 'A') return [
     E('chest_press', 'Chest press machine', 3, main, 'Neutral handles', 1),
     E('row', 'Seated cable row', 3, main, 'V-handle', 1),
-    E('pulldown', 'Lat pulldown', 3, main, 'Neutral grip', 1),
-    ...(p2 ? [E('shoulder_press', 'Machine shoulder press', 3, '8-10', 'Neutral handles', 1)] : []),
-    E('dead_bug', 'Dead bug', 2, '8 per side', 'Low back flat', 0),
+    E('pulldown', 'Diverging lat pulldown', 3, main, 'Neutral handles, elbows down to your sides', 1),
+    p2 ? E('shoulder_press', 'Converging shoulder press', 3, '8-10', 'Neutral handles', 1)
+       : E('shoulder_press', 'Converging shoulder press', 2, '10-12', 'Neutral handles, keep it light', 1),
+    E('rear_delt', 'Rear delt fly', 2, '12-15', 'Face the pad, light, squeeze your shoulder blades', 1),
+    E('biceps_curl', 'Biceps curl machine', 2, '10-12', 'Loose grip, thumb relaxed', 1),
     E('pallof', 'Pallof press', 2, '10 per side', 'Light', 1)
   ];
   return [
     E('leg_press', 'Leg press', 3, main, 'Pain-free depth only', 1),
-    p2 ? E('goblet_squat', 'Goblet squat', 3, '6-10', 'Cup the dumbbell with both palms', 1)
+    p2 ? E('box_squat', 'Box squat to bench', 3, '10-12', 'Bodyweight. Lower bench than Phase 1 if the knee allows', 0)
        : E('box_squat', 'Box squat to bench', 3, '8-10', 'Bodyweight. Higher box if the knee complains', 0),
-    ...(p2 ? [E('step_up', 'Step-up', 3, '8 per leg', 'Low box, one hand on a rack or wall', 1)] : []),
+    ...(p2 ? [E('step_up', 'Step-up', 3, '8 per leg', 'Low box, one hand on a rack or wall', 0)] : []),
     E('ham_curl', 'Hamstring curl machine', 3, '10-12', 'Slow on the way down', 1),
     E('leg_ext', 'Leg extension', 2, '12-15', 'Light, first half of the range only. First thing to cut if the knee complains', 1),
-    p2 ? E('glute_bridge', 'Glute bridge', 2, '10-12', 'Dumbbell resting on your hips', 1)
-       : E('glute_bridge', 'Glute bridge', 2, '12-15', 'Bodyweight, on the floor', 0),
     E('hip_abd', 'Hip abduction machine', 2, '15', 'Smooth reps, no swinging', 1),
     E('calf_raise', 'Standing calf raise', 2, '12-15', 'Pause at the top', 1)
   ];
@@ -420,20 +420,19 @@ const HOW = {
   h_wallsit: { q: 'wall sit proper form knee pain' + PT, steps: ['Back flat on the wall, feet shoulder width and out in front of you.', 'Slide down only as far as the knee stays at 3/10 or less. A shallow sit still counts.', 'Knees point the same way as your toes. Weight stays in your heels.'] },
   h_side: { q: 'side lying leg raise hip abduction' + PT, steps: ['Lie on your side, bottom knee bent for balance.', 'Top leg straight, toes pointing forward, not up at the ceiling.', 'Lift to about 30 to 45 degrees, lower slowly. Don\'t roll your hips back.'] },
   leg_press: { q: 'leg press machine proper form' + PT, steps: ['Feet shoulder width in the middle of the platform.', 'Lower until just before pain or until your low back wants to peel off the pad. Stop there.', 'Press through your whole foot. Don\'t snap the knees straight at the top.', 'No leg press free? Do 2 extra sets of the squat instead.'] },
-  chest_press: { q: 'seated chest press machine neutral grip form', steps: ['Set the seat so the handles line up with the middle of your chest.', 'Shoulder blades back against the pad and keep them there.', 'Press out, stop just short of locking the elbows, come back slow.', 'No chest press machine? Dumbbell bench press on a flat bench, palms facing each other, light.'] },
+  chest_press: { q: 'seated chest press machine neutral grip form', steps: ['Set the seat so the handles line up with the middle of your chest.', 'Shoulder blades back against the pad and keep them there.', 'Press out, stop just short of locking the elbows, come back slow.', 'Chest press taken? Use the pec fly side of the Rear Delt / Pec Fly machine, 3 × 10-12.'] },
   row: { q: 'seated cable row v handle form', steps: ['Sit tall with a slight bend in the knees.', 'Pull the handle to your lower ribs and squeeze your shoulder blades together.', 'Your torso stays still. Don\'t rock back to move the weight.', 'Cable row taken? Any seated row machine with a chest pad works the same.'] },
-  glute_bridge: { q: 'glute bridge floor form' + PT, steps: ['Lie on your back, knees bent, feet flat and about hip width.', 'Squeeze your glutes and push through your heels to lift your hips.', 'Stop when your body is a straight line from knees to shoulders. Don\'t arch your low back.', 'Lower slowly. Phase 2: rest a dumbbell across your hips and hold it in place.'] },
   calf_raise: { q: 'standing calf raise machine form', steps: ['Balls of your feet on the edge, heels hanging free.', 'Lower into a comfortable stretch.', 'Rise as high as you can and hold the top for a full second.', 'No calf machine? Seated calf raise machine, or calf raises on a step holding a rail.'] },
-  dead_bug: { q: 'dead bug exercise low back flat' + PT, steps: ['Lie on your back, arms straight up, knees bent 90 degrees above your hips.', 'Press your low back into the floor and keep it there.', 'Slowly reach one arm and the opposite leg out, come back, switch sides.', 'If your back starts to arch, shorten the reach.'] },
-  box_squat: { q: 'box squat to bench bodyweight' + PT, steps: ['Stand in front of a bench with feet about shoulder width.', 'Sit back and down until you lightly touch the bench. Don\'t plop.', 'Stand up through your heels. Use a higher box if the knee complains.'] },
-  goblet_squat: { q: 'goblet squat dumbbell form', steps: ['Hold one dumbbell upright against your chest, cupping the top end with both palms.', 'Squat down between your hips with your chest up.', 'Knees track over your toes. Go only as deep as pain allows.'] },
+  box_squat: { q: 'box squat to bench bodyweight' + PT, steps: ['Stand in front of a bench with feet about shoulder width.', 'Sit back and down until you lightly touch the bench. Don\'t plop.', 'Stand up through your heels. Use a higher box if the knee complains.', 'Phase 2: use a slightly lower bench only if the knee stays at 3/10 or less.'] },
   leg_ext: { q: 'leg extension machine form knee' + PT, steps: ['Line your knee up with the machine\'s pivot point. Pad sits on your lower shin.', 'Keep it light and stay in the partial range on your plan.', 'Smooth reps, no kicking or swinging.', 'No machine? Skip it. The squat and leg press cover it.'] },
-  ham_curl: { q: 'seated hamstring curl machine form', steps: ['Line your knee up with the pivot. Pad sits just above your heel.', 'Curl the pad down and back, squeeze for a beat.', 'Take your time letting it back up.', 'No hamstring curl machine? Do 1 extra set of glute bridges instead.'] },
-  pulldown: { q: 'lat pulldown neutral grip form', steps: ['Thighs locked under the pad.', 'Pull the handle to your upper chest, elbows driving down and in.', 'A small lean back is fine. Don\'t yank or swing.', 'No pulldown? Sit on a bench at a high cable station and pull a bar or two handles down the same way.'] },
-  hip_abd: { q: 'hip abduction machine form', steps: ['Sit tall with your back against the pad.', 'Push your knees out, pause.', 'Let them come back in slowly without the weights slamming.', 'No machine? Do the side-lying leg raise from the home routine, 2 × 15 each side.'] },
-  pallof: { q: 'pallof press cable form', steps: ['Stand sideways to the cable, handle at the middle of your chest.', 'Press straight out and don\'t let the cable twist you.', 'Hold for a beat, bring it back in. Do both sides.', 'No free cable? Forearm plank, 3 × 20 sec, instead.'] },
+  ham_curl: { q: 'seated hamstring curl machine form', steps: ['Line your knee up with the pivot. Pad sits just above your heel.', 'Curl the pad down and back, squeeze for a beat.', 'Take your time letting it back up.', 'No hamstring curl machine? Skip it. The leg press covers some of it.'] },
+  pulldown: { q: 'precor diverging lat pulldown form', steps: ['Set the seat so your thighs lock under the pad.', 'Grab the handles with palms facing each other. Each arm moves on its own.', 'Pull your elbows down to your sides and squeeze your back. Don\'t yank or swing.', 'Let the handles rise slowly until your arms are straight.', 'Machine taken? Any lat pulldown or a high cable station with two handles works the same.'] },
+  hip_abd: { q: 'hip abduction machine form', steps: ['Sit tall with your back against the pad.', 'Push your knees out, pause.', 'Let them come back in slowly without the weights slamming.', 'Machine taken? Skip it today.'] },
+  pallof: { q: 'pallof press cable form', steps: ['Stand sideways to the cable, handle at the middle of your chest.', 'Press straight out and don\'t let the cable twist you.', 'Hold for a beat, bring it back in. Do both sides.', 'No free cable? Skip it today.'] },
   step_up: { q: 'step up exercise knee friendly' + PT, steps: ['Put your whole foot on the box.', 'Drive up through the heel of the top leg. Barely push off with the bottom leg.', 'Lower slowly. The knee tracks over your toes.'] },
-  shoulder_press: { q: 'seated machine shoulder press neutral grip form', steps: ['Set the seat so the handles start near shoulder height.', 'Press up without shrugging. Keep your ribs down.', 'Lower with control.', 'No machine? Seated dumbbell press on a bench with the back pad up.'] },
+  shoulder_press: { q: 'precor converging shoulder press form', steps: ['Set the seat so the handles start at about shoulder height.', 'Use the neutral handles (palms facing each other) to go easy on the thumb.', 'Press up without shrugging. Keep your ribs down and your back on the pad.', 'Lower with control. Light weight is the point here.', 'Machine taken? Skip it today. The chest press covers some of it.'] },
+  rear_delt: { q: 'precor rear delt pec fly machine rear delt form', steps: ['Set the arms to the rear delt position. The placard on the machine shows which way.', 'Sit facing the chest pad with the handles at shoulder height.', 'Arms almost straight, sweep them out and back until they line up with your body. Squeeze your shoulder blades.', 'Come back slowly. If you have to shrug or swing, go lighter.', 'Machine taken? Skip it today. The row and pulldown cover your upper back.'] },
+  biceps_curl: { q: 'precor biceps curl machine form', steps: ['Set the seat so your armpits sit at the top of the pad and your elbows line up with the pivot.', 'Hold the handles loosely. Fingers wrapped, thumb relaxed. Don\'t squeeze hard.', 'Curl up, squeeze for a beat, lower slowly. Don\'t let the weight drop.', 'Thumb above 3/10? Go lighter or skip it today.', 'Machine taken? Cable curl with a rope at a low cable station.'] },
   g_wrap: { q: 'how to wrap hands muay thai beginner', steps: ['Thumb through the loop, then lay the wrap across the back of your hand.', 'A few loops around the wrist, then around the knuckles.', 'Weave between the fingers, then finish back at the wrist.', 'Snug, not tight. Tingling fingers means redo it looser.'] }
 };
 const howFor = it => it.how || HOW[it.ex ? it.ex.id : it.id] || null;
